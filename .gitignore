@@ -1,2 +1,4 @@
 app/cache/*
 app/logs/*
+.DS_Store
+app/config/parameters.ini

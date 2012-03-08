@@ -1,0 +1,7 @@
+parameters:
+#    mti_music_and_me.example.class: MTI\MusicAndMeBundle\Example
+
+services:
+#    mti_music_and_me.example:
+#        class: %mti_music_and_me.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
