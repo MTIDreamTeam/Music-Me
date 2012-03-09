@@ -1,0 +1,14 @@
+To create a new model (i.e. located in MTI/MusicAndMeBundle/Entity/Product.php) :
+
+	php app/console doctrine:generate:entity --entity="MTIMusicAndMeBundle:Product"
+
+
+And generate the associated entities :
+
+	php app/console doctrine:generate:entities MTI/MusicAndMeBundle/Entity/Product
+
+
+To update the database model :
+
+	php app/console doctrine:schema:update
+	php app/console doctrine:schema:update --force
