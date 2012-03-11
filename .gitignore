@@ -39,3 +39,4 @@ Thumbs.db
 app/cache/*
 app/logs/*
 app/config/parameters.ini
+app/config/config.ini
