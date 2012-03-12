@@ -13,19 +13,19 @@
 				{{ form_label(form.firstname, 'Prénom') }}{{ form_widget(form.firstname) }}
 			</div>
 			<div>
-				{% if form_errors(form.firstname) %}
+				{% if form_errors(form.lastname) %}
 				<div class="form-errors">{{ form_errors(form.lastname) }}</div>
 				{% endif %}
 				{{ form_label(form.lastname, 'Nom') }}{{ form_widget(form.lastname) }}
 			</div>
 			<div>
-				{% if form_errors(form.firstname) %}
+				{% if form_errors(form.password) %}
 				<div class="form-errors">{{ form_errors(form.password) }}</div>
 				{% endif %}
 				{{ form_label(form.password, 'Mot de passe') }}{{ form_widget(form.password) }}
 			</div>
 			<div>
-				{% if form_errors(form.firstname) %}
+				{% if form_errors(form.email) %}
 				<div class="form-errors">{{ form_errors(form.email) }}</div>
 				{% endif %}
 				{{ form_label(form.email, 'Adresse email') }}{{ form_widget(form.email) }}
