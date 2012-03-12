@@ -22,7 +22,7 @@ class AccountController extends Controller
 												->getForm();
 
 		return $this->render(
-			'MTIMusicAndMeBundle:Signup:index.html.twig',
+			'MTIMusicAndMeBundle:Account:create.html.twig',
 			array(
 				'form' => $form->createView()
 			)
@@ -39,7 +39,7 @@ class AccountController extends Controller
 												->getForm();
 
 		return $this->render(
-			'MTIMusicAndMeBundle:Signup:index.html.twig',
+			'MTIMusicAndMeBundle:Account:create.html.twig',
 			array(
 				'form' => $form->createView()
 			)
@@ -73,6 +73,10 @@ class AccountController extends Controller
 			}
 			else
 			{
+				$em = $this->getDoctrine()->getEntityManager();
+				$em->persist($user);
+				$em->flush();
+				
 				return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_create'), 302);
 			}
 		}

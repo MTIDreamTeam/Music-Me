@@ -5,6 +5,7 @@ body {
 	color: #515151;
 	background: #fff url(/images/mixer.png) no-repeat center 0;
 	font: 16px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	padding-bottom: 70px;
 }
 
 html {
