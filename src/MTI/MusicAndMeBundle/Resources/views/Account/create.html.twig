@@ -1,0 +1,38 @@
+{% extends 'MTIMusicAndMeBundle:BaseHTML:base.html.twig' %}
+
+{% block title %}{{ parent() }} - Créer un compte{% endblock %}
+
+{% block content %}
+	<form action="{{ path('MTIMusicAndMeBundle_validate') }}" method="post" {{ form_enctype(form) }}>
+		<div id="form">
+			<div class="title">Créer un compte</div>
+			<div>
+				{% if form_errors(form.firstname) %}
+				<div class="form-errors">{{ form_errors(form.firstname) }}</div>
+				{% endif %}
+				{{ form_label(form.firstname, 'Prénom') }}{{ form_widget(form.firstname) }}
+			</div>
+			<div>
+				{% if form_errors(form.firstname) %}
+				<div class="form-errors">{{ form_errors(form.lastname) }}</div>
+				{% endif %}
+				{{ form_label(form.lastname, 'Nom') }}{{ form_widget(form.lastname) }}
+			</div>
+			<div>
+				{% if form_errors(form.firstname) %}
+				<div class="form-errors">{{ form_errors(form.password) }}</div>
+				{% endif %}
+				{{ form_label(form.password, 'Mot de passe') }}{{ form_widget(form.password) }}
+			</div>
+			<div>
+				{% if form_errors(form.firstname) %}
+				<div class="form-errors">{{ form_errors(form.email) }}</div>
+				{% endif %}
+				{{ form_label(form.email, 'Adresse email') }}{{ form_widget(form.email) }}
+			</div>
+			<div id="validate-container">
+				<input value="Créer mon compte" type="submit" />
+			</div>
+		</div>
+	</form>
+{% endblock %}

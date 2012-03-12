@@ -120,9 +120,9 @@ footer > div {
 /* @group Forms */
 
 form {
-	width: 300px;
+	width: 350px;
 	text-align: right;
-	margin: 50px auto auto;
+	margin: 50px auto 50px;
 	color: #f8f8f8;
 	padding: 40px 40px 20px;
 	background-color: rgba(0,0,0,0.80);
@@ -135,6 +135,13 @@ form {
 	box-shadow: 0px 2px 1px #000;
 }
 
+form .title {
+	font-size: 35px;
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 50px;
+}
+
 form label {
 	float: left;
 }
@@ -143,10 +150,39 @@ form input {
 	width: 200px;
 }
 
-form > div > div {
-	margin-bottom: 20px;
+input[type="submit"] {
+	margin-top: 20px;
 }
 
+/* @group Errors */
 
+.form-errors {
+	/*background-color: rgba(217,0,19,0.75);*/
+	color: #ff161a;
+	/*padding: 10px;*/
+	margin: 0 0 6px;
+}
+
+.form-errors ul {
+	text-align: left;
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
+	-webkit-padding-start: 0;
+}
+
+.form-errors li {
+	list-style-type: none;
+	font-weight: bold;
+}
+
+/* @end */
+
+form > div > div {
+	margin-bottom: 30px;
+}
+
+#validate-container {
+	text-align: center;
+}
 
 /* @end */

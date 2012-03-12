@@ -1,0 +1,26 @@
+MTI\MusicAndMeBundle\Entity\User:
+    properties:
+        firstname:
+            - NotBlank:
+                message: Vous devez entrer votre prénom
+            - MaxLength:
+                limit: 100
+                message: Votre prénom ne doit pas excéder 100 caractères
+        lastname:
+            - NotBlank:
+                message: Vous devez entrer votre nom
+            - MaxLength:
+                limit: 100
+                message: Votre nom ne doit pas excéder 100 caractères
+        password:
+            - NotBlank:
+                message: Vous devez entrer un mot de passe
+            - MinLength:
+                limit: 6
+                message: Votre mot de passe doit avoir au moins 6 caractères
+        email:
+            - NotBlank:
+                message: Vous devez entrer une adresse email valide
+            - Email:
+                message: L'email "{{ value }}" n'est pas valide
+                checkMX: false

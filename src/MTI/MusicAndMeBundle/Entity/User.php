@@ -20,12 +20,12 @@ class User
     /**
      * @ORM\Column(type="string", length=100)
      */
-    protected $firstName;
+    protected $firstname;
 
     /**
      * @ORM\Column(type="string", length=100)
      */
-    protected $lastName;
+    protected $lastname;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -48,43 +48,43 @@ class User
     }
 
     /**
-     * Set firstName
+     * Set firstname
      *
-     * @param string $firstName
+     * @param string $firstname
      */
-    public function setFirstName($firstName)
+    public function setFirstname($firstname)
     {
-        $this->firstName = $firstName;
+        $this->firstname = $firstname;
     }
 
     /**
-     * Get firstName
+     * Get firstname
      *
      * @return string 
      */
-    public function getFirstName()
+    public function getFirstname()
     {
-        return $this->firstName;
+        return $this->firstname;
     }
 
     /**
-     * Set lastName
+     * Set lastname
      *
-     * @param string $lastName
+     * @param string $lastname
      */
-    public function setLastName($lastName)
+    public function setLastname($lastname)
     {
-        $this->lastName = $lastName;
+        $this->lastname = $lastname;
     }
 
     /**
-     * Get lastName
+     * Get lastname
      *
      * @return string 
      */
-    public function getLastName()
+    public function getLastname()
     {
-        return $this->lastName;
+        return $this->lastname;
     }
 
     /**

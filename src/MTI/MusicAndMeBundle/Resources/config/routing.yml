@@ -2,9 +2,21 @@ MTIMusicAndMeBundle_hello:
     pattern:  /hello/{name}
     defaults: { _controller: MTIMusicAndMeBundle:Default:index }
 
-MTIMusicAndMeBundle_signup:
-    pattern:  /signup
-    defaults: { _controller: MTIMusicAndMeBundle:Signup:index }
+MTIMusicAndMeBundle_account:
+    pattern:  /account/
+    defaults: { _controller: MTIMusicAndMeBundle:Account:index }
+
+MTIMusicAndMeBundle_login:
+    pattern:  /account/login/
+    defaults: { _controller: MTIMusicAndMeBundle:Account:login }
+
+MTIMusicAndMeBundle_create:
+    pattern:  /account/create/
+    defaults: { _controller: MTIMusicAndMeBundle:Account:create }
+
+MTIMusicAndMeBundle_validate:
+    pattern:  /account/validate/
+    defaults: { _controller: MTIMusicAndMeBundle:Account:validate }
 
 MTIMusicAndMeBundle_homepage:
     pattern:  /
