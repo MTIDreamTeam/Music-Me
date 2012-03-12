@@ -2,6 +2,10 @@ MTIMusicAndMeBundle_hello:
     pattern:  /hello/{name}
     defaults: { _controller: MTIMusicAndMeBundle:Default:index }
 
+MTIMusicAndMeBundle_signup:
+    pattern:  /signup
+    defaults: { _controller: MTIMusicAndMeBundle:Signup:index }
+
 MTIMusicAndMeBundle_homepage:
     pattern:  /
     defaults: { _controller: MTIMusicAndMeBundle:Home:index }
