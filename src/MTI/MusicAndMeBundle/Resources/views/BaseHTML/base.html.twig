@@ -9,20 +9,14 @@
 		{% endstylesheets %}
 	</head>
 	<body>
-		<header class="black-gradient">
 		{% block header %}
-			<img src="{{ asset('images/logo.png') }}" />
+			{% include 'MTIMusicAndMeBundle:UI:header.html.twig' %}
 		{% endblock %}
-		</header>
 		<div class="contents">
 		{% block content %}{% endblock %}
 		</div>
-		<footer class="gray-gradient">{% block footer %}
-			<div>
-				<div class="player">
-					<span class="black-gradient" style="width: 50%;"></span>
-				</div>
-			</div>
-		{% endblock %}</footer>
+		{% block footer %}
+			{% include 'MTIMusicAndMeBundle:UI:player.html.twig' %}
+		{% endblock %}
 	</body>
 </html>
