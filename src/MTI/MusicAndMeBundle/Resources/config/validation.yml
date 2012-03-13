@@ -24,3 +24,18 @@ MTI\MusicAndMeBundle\Entity\User:
             - Email:
                 message: L'email "{{ value }}" n'est pas valide
                 checkMX: false
+
+MTI\MusicAndMeBundle\Entity\LoginUser:
+    properties:
+        password:
+            - NotBlank:
+                message: Vous devez entrer un mot de passe
+            - MinLength:
+                limit: 6
+                message: Votre mot de passe doit avoir au moins 6 caractères
+        email:
+            - NotBlank:
+                message: Vous devez entrer une adresse email valide
+            - Email:
+                message: L'email "{{ value }}" n'est pas valide
+                checkMX: false

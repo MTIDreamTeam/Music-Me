@@ -10,6 +10,10 @@ MTIMusicAndMeBundle_login:
     pattern:  /account/login/
     defaults: { _controller: MTIMusicAndMeBundle:Account:login }
 
+MTIMusicAndMeBundle_logout:
+    pattern:  /account/logout/
+    defaults: { _controller: MTIMusicAndMeBundle:Account:logout }
+
 MTIMusicAndMeBundle_create:
     pattern:  /account/create/
     defaults: { _controller: MTIMusicAndMeBundle:Account:create }

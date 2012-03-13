@@ -15,6 +15,25 @@ framework:
     session:
         default_locale: %locale%
         auto_start:     true
+        storage_id:     session.storage.pdo
+
+parameters:
+    pdo.db_options:
+        db_table:    session
+        db_id_col:   session_id
+        db_data_col: session_value
+        db_time_col: session_time
+
+services:
+    pdo:
+        class: PDO
+        arguments:
+            dsn:      "mysql:dbname=sessions"
+            user:     symfony
+            password: symfony
+    session.storage.pdo:
+        class:     Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage
+        arguments: [@pdo, %session.storage.options%, %pdo.db_options%]
 
 # Twig Configuration
 twig:
