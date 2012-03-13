@@ -20,12 +20,6 @@ class AccountController extends Controller
 			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'), 301);
 		
 		$session = $this->get('session');
-		// $session->set('user_id', '1234');
-		// 
-		// if ($session->get('user_id') == null)
-		// {
-		// 	return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'), 301);
-		// }
 		
 		$user = $this->getDoctrine()
 								->getRepository('MTIMusicAndMeBundle:User')
@@ -61,6 +55,8 @@ class AccountController extends Controller
 			}
 			else
 			{
+				$user->setPassword(md5($user->getEmail() . $user->getPassword()));
+				
 				$em = $this->getDoctrine()->getEntityManager();
 				$em->persist($user);
 				$em->flush();
@@ -110,27 +106,40 @@ class AccountController extends Controller
 			// There is no semantical errors in the form
 			else
 			{
-				$registeredUser = $this->getDoctrine()
-										->getRepository('MTIMusicAndMeBundle:User')
-										->findBy(
-											array('email' => $form->getData()->getEmail())
-										);
-				// return new Response(count($registeredUser) == 1 ? 'yes' : 'no');
-				if (count($registeredUser) == 0 || $registeredUser[0]->getPassword() != $form->getData()->getPassword())
+				$results = $this->getDoctrine()
+								->getRepository('MTIMusicAndMeBundle:User')
+								->findBy(array('email' => $form->getData()->getEmail()));
+				
+				if (count($results) == 0)
 				{
 					return $this->render(
 						'MTIMusicAndMeBundle:Account:login.html.twig',
 						array(
 							'form' => $form->createView(),
-							'login_error' => 'Email ou mot de passe incorrect'
+							'login_error' => 'Email incorrect'
 						)
 					);
+				}
+				else
+				{
+					$registeredUser = $results[0];
+					$hashedFormPassword = md5($form->getData()->getEmail() . $form->getData()->getPassword());
+					if ($registeredUser->getPassword() != $hashedFormPassword)
+					{
+						return $this->render(
+							'MTIMusicAndMeBundle:Account:login.html.twig',
+							array(
+								'form' => $form->createView(),
+								'login_error' => 'Mot de passe incorrect'
+							)
+						);
+					}
 				}
 				
 				$session = $this->get('session');
 				$route = $session->get('nextRoute');
 				$session->set('nextRoute', 'MTIMusicAndMeBundle_account');
-				$session->set('user_id', $registeredUser[0]->getId());
+				$session->set('user_id', $registeredUser->getId());
 				// return new Response('route : ');
 				
 				return $this->redirect($this->generateUrl($route), 301);
