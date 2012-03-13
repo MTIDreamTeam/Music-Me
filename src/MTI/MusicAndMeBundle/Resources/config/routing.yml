@@ -25,3 +25,11 @@ MTIMusicAndMeBundle_validate:
 MTIMusicAndMeBundle_homepage:
     pattern:  /
     defaults: { _controller: MTIMusicAndMeBundle:Home:index }
+
+MTIMusicAndMeBundle_upload:
+    pattern:  /upload
+    defaults: { _controller: MTIMusicAndMeBundle:Upload:index }
+
+MTIMusicAndMeBundle_save:
+    pattern:  /save
+    defaults: { _controller: MTIMusicAndMeBundle:Upload:save }
