@@ -19,14 +19,14 @@ class Musique
     public $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255)
-     */
-    public $name;
-
-    /**
      * @ORM\Column(name="title", type="string", length=255)
      */
     public $title;
+
+    /**
+     * @ORM\Column(name="genre", type="string", length=255)
+     */
+    public $genre;
 
      /**
      * @ORM\Column(name="year", type="integer", nullable=true)
@@ -34,14 +34,25 @@ class Musique
     public $year;
 
     /**
+     * @ORM\Column(name="duree", type="string", nullable=true, length=255)
+     */
+    public $duree;
+    
+    /**
      * @ORM\Column(type="string", length=255)
      */
     public $path;
 
     /**
-     * @Assert\File(maxSize="1000000000")
+     * @Assert\File(maxSize="100000000000000")
      */
     public $file;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="MTI\MusicAndMeBundle\Entity\Album")
+     */
+    public $album;
+
 
     public function getAbsolutePath()
     {
@@ -53,7 +64,7 @@ class Musique
         return null === $this->path ? null : $this->getUploadDir().'/'.$this->path;
     }
 
-    protected function getUploadRootDir()
+    public function getUploadRootDir()
     {
         // the absolute directory path where uploaded documents should be saved
         return __DIR__.'/../../../../web/'.$this->getUploadDir();
@@ -65,46 +76,69 @@ class Musique
         return 'uploads/musique';
     }
 
-    public function upload()
+    public function upload($art, $alb)
     {
-      // the file property can be empty if the field is not required
       if (null === $this->file) {
 	return;
       }
-      echo "id -> ".$this->id;
-      echo "extension -> ".$this->file->guessExtension();
-      echo "name -> ".$this->file->getClientOriginalName();
-      // we use the original file name here but you should
-      // sanitize it at least to avoid any security issues
       
       $getid3 = new \getID3_getID3();
       $getid3->encoding = 'UTF-8';
-      try {
+      $info = $getid3->Analyze($this->file);
+      
+      if (isset($getid3->info['tags']['id3v2']))
+      {
+	echo 'ok';
+	$this->title = $getid3->info['tags']['id3v2']['title'][0];
+	$this->year = $getid3->info['tags']['id3v2']['year'][0];
+	$this->duree = $getid3->info['playtime_string'];
+	$this->genre = $getid3->info['tags']['id3v2']['genre'][0];
 	
-	$info = $getid3->Analyze($this->file);
-	echo '<br>Durée :  <strong>' . $info['playtime_string'] . '</strong><br>';
-	foreach ($getid3->info['tags'] as $tag => $tag_info)
-	  foreach($getid3->info['tags'][$tag] as $t => $i)
-	   echo $tag."#".$i[0]."|".$t."<br>";
-	   
+	$this->album = $alb;
+	
+	$this->album->title = $getid3->info['tags']['id3v2']['album'][0];
+	$this->album->artiste = $art;
+	$this->album->artiste->name = $getid3->info['tags']['id3v2']['artist'][0];
       }
-      catch (Exception $e) {
-	
-	echo 'An error occured: ' .  $e->message;
-      }
-	
-        echo '<br>Artiste :  <strong>' . $getid3->info['tags']['id3v2']['artist'][0] . '</strong><br>';
-	echo 'Album :  <strong>' . $getid3->info['tags']['id3v2']['album'][0] . '</strong><br>';
-	echo 'Genre :  <strong>' . $getid3->info['tags']['id3v2']['genre'][0] . '</strong><br>';
-	echo 'Annee de parution :  <strong>' . $getid3->info['tags']['id3v2']['year'][0] . '</strong><br>';
-	
+      else if (isset($getid3->info['tags']['id3v1']))
+      {
+	if (isset($getid3->info['tags']['id3v1']['title']) &&
+	  isset($getid3->info['tags']['id3v1']['genre']) &&
+	  isset($getid3->info['tags']['id3v1']['year']) &&
+	  isset($getid3->info['tags']['id3v1']['album']) &&
+	  isset($getid3->info['tags']['id3v1']['artist']))
+	{
+	  $this->title = $getid3->info['tags']['id3v1']['title'][0];
+	  $this->year = $getid3->info['tags']['id3v1']['year'][0];
+	  $this->duree = $getid3->info['playtime_string'];
+	  $this->genre = $getid3->info['tags']['id3v1']['genre'][0];
 
+	  $this->album = $alb;
+	  $this->album->title = $getid3->info['tags']['id3v1']['album'][0];
+	  $this->album->artiste = $art;
+	  $this->album->artiste->name = $getid3->info['tags']['id3v1']['artist'][0];
+	}
+      }
+      
+    }
+    public function save()
+    {
       // move takes the target directory and then the target filename to move to
-      $this->file->move($this->getUploadRootDir(), $this->file->getClientOriginalName());
-      // set the path property to the filename where you'ved saved the file
-      $this->path = $this->file->getClientOriginalName();
-      echo "path : ".$this->path;
+      $this->file->move($this->getUploadRootDir()."/".$this->album->artiste->name."/".$this->album->title, $this->title.".mp3");
       // clean up the file property as you won't need it anymore
       $this->file = null;
+    }
+
+    public function  place()
+    {
+      // move takes the target directory and then the target filename to move to
+      $this->file->move($this->getUploadRootDir()."/".$this->album->artiste->name."/".$this->album->title, $this->title.".mp3");
+    // clean up the file property as you won't need it anymore
+      $this->file = null;
+    }
+
+    public function destroy()
+    {
+      unlink($this->file->getPathname());
     }
 }
