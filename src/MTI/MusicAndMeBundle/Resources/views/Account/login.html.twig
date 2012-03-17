@@ -3,32 +3,53 @@
 {% block title %}{{ parent() }} - Connexion{% endblock %}
 
 {% block content %}
-	<form action="{{ path('MTIMusicAndMeBundle_login') }}" method="post" {{ form_enctype(form) }}>
-		<div id="form">
-			<div class="title">Connexion</div>
-			{% if login_error %}
-			<div>
-				<div class="form-errors">
-					<ul>
-						<li class="center">{{ login_error }}</li>
-					</ul>
-				</div>
-			</div>
-			{% endif %}
-			<div>
-				{% if form_errors(form.email) %}
-				<div class="form-errors">{{ form_errors(form.email) }}</div>
-				{% endif %}
-				{{ form_label(form.email, 'Adresse email') }}{{ form_widget(form.email) }}
-			</div>
-				{% if form_errors(form.password) %}
-				<div class="form-errors">{{ form_errors(form.password) }}</div>
-				{% endif %}
-				{{ form_label(form.password, 'Mot de passe') }}{{ form_widget(form.password) }}
-			</div>
-			<div id="validate-container">
-				<input value="Connexion à mon compte" type="submit" />
+	<ul class="breadcrumb">
+		<li>
+			<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Accueil</a> <span class="divider">/</span>
+		</li>
+		<li class="active">Connexion</li>
+	</ul>
+	<section id="login">
+		<h2>Connexion</h2>
+		<div class="row">
+			<div class="span12">
+				<form class="form-horizontal" action="{{ path('MTIMusicAndMeBundle_login') }}" method="post" {{ form_enctype(form) }}>
+					<fieldset>
+						<legend>Entrez vos identifiants Music &amp; Me</legend>
+						<div c'ass="control-group"'>
+							<label class="control-label" for="">Adresse email</label>
+						</div>
+						
+						
+						<div id="form">
+							<div class="title">Connexion</div>
+							{% if login_error %}
+							<div>
+								<div class="form-errors">
+									<ul>
+										<li class="center">{{ login_error }}</li>
+									</ul>
+								</div>
+							</div>
+							{% endif %}
+							<div>
+								{% if form_errors(form.email) %}
+								<div class="form-errors">{{ form_errors(form.email) }}</div>
+								{% endif %}
+								{{ form_label(form.email, 'Adresse email') }}{{ form_widget(form.email) }}
+							</div>
+								{% if form_errors(form.password) %}
+								<div class="form-errors">{{ form_errors(form.password) }}</div>
+								{% endif %}
+								{{ form_label(form.password, 'Mot de passe') }}{{ form_widget(form.password) }}
+							</div>
+							<div id="validate-container">
+								<input value="Connexion à mon compte" type="submit" />
+							</div>
+						</div>
+					</fieldset>
+				</form>
 			</div>
 		</div>
-	</form>
+	</section>
 {% endblock %}

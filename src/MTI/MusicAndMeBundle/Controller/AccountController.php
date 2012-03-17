@@ -17,19 +17,30 @@ class AccountController extends Controller
 	public function indexAction(Request $request)
 	{
 		if (!Authentication::isAuthenticated($request))
-			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'), 301);
+			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
 		
 		$session = $this->get('session');
 		
 		$user = $this->getDoctrine()
-								->getRepository('MTIMusicAndMeBundle:User')
-								->find($session->get('user_id'));
+						->getRepository('MTIMusicAndMeBundle:User')
+						->find($session->get('user_id'));
 		
-		return new Response("Hello ".$user->getFirstname() . ' ' . $user->getLastname());
+		$userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
+		
+		return $this->render(
+			'MTIMusicAndMeBundle:Account:index.html.twig',
+			array(
+				'is_connected' => $user == null ? false : true,
+				'user_name' => $userName,
+			)
+		);
 	}
 	
 	public function createAction(Request $request)
 	{
+		if (Authentication::isAuthenticated($request))
+			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_account'));
+		
 		$user = new User();
 		$form = $this->createFormBuilder($user)->add('firstname', 'text')
 												->add('lastname', 'text')
@@ -61,7 +72,7 @@ class AccountController extends Controller
 				$em->persist($user);
 				$em->flush();
 				
-				return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_account'), 302);
+				return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_account'));
 			}
 		}
 		else
@@ -78,7 +89,7 @@ class AccountController extends Controller
 	public function loginAction(Request $request)
 	{
 		if (Authentication::isAuthenticated($request))
-			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_account'), 301);
+			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_account'));
 		
 		$user = new LoginUser();
 
@@ -142,7 +153,7 @@ class AccountController extends Controller
 				$session->set('user_id', $registeredUser->getId());
 				// return new Response('route : ');
 				
-				return $this->redirect($this->generateUrl($route), 301);
+				return $this->redirect($this->generateUrl($route));
 			}
 		}
 		else
@@ -160,18 +171,10 @@ class AccountController extends Controller
 	{
 		// Log the user out
 		$session = $this->get('session');
+		$session->set('user_id', null);
 		$session->invalidate();
 		$this->get("security.context")->setToken(null);
 		
-		return new Response("session invalidated : ".$session->get('user_id'));
-		
-		return new Response($request->attributes->get('_route'));
-		
-		if ($session)
-		{
-			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'), 301);
-		}
-		
-		return new Response("Failed to logout");
+		return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_homepage'));
 	}
 }

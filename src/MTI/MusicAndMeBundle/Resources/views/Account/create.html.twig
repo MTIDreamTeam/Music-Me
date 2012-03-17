@@ -3,6 +3,12 @@
 {% block title %}{{ parent() }} - Créer un compte{% endblock %}
 
 {% block content %}
+	<ul class="breadcrumb">
+		<li>
+			<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Accueil</a> <span class="divider">/</span>
+		</li>
+		<li class="active">Créer un compte</li>
+	</ul>
 	<form action="{{ path('MTIMusicAndMeBundle_create') }}" method="post" {{ form_enctype(form) }}>
 		<div id="form">
 			<div class="title">Créer un compte</div>
