@@ -1,38 +1,59 @@
 {% extends 'MTIMusicAndMeBundle:BaseHTML:base.html.twig' %}
 
+{% form_theme form 'MTIMusicAndMeBundle:Form:fields.html.twig' %}
+
+
 {% block title %}{{ parent() }} - Créer un compte{% endblock %}
 
 {% block content %}
-	<form action="{{ path('MTIMusicAndMeBundle_create') }}" method="post" {{ form_enctype(form) }}>
-		<div id="form">
-			<div class="title">Créer un compte</div>
-			<div>
-				{% if form_errors(form.firstname) %}
-				<div class="form-errors">{{ form_errors(form.firstname) }}</div>
-				{% endif %}
-				{{ form_label(form.firstname, 'Prénom') }}{{ form_widget(form.firstname) }}
-			</div>
-			<div>
-				{% if form_errors(form.lastname) %}
-				<div class="form-errors">{{ form_errors(form.lastname) }}</div>
-				{% endif %}
-				{{ form_label(form.lastname, 'Nom') }}{{ form_widget(form.lastname) }}
-			</div>
-			<div>
-				{% if form_errors(form.password) %}
-				<div class="form-errors">{{ form_errors(form.password) }}</div>
-				{% endif %}
-				{{ form_label(form.password, 'Mot de passe') }}{{ form_widget(form.password) }}
-			</div>
-			<div>
-				{% if form_errors(form.email) %}
-				<div class="form-errors">{{ form_errors(form.email) }}</div>
-				{% endif %}
-				{{ form_label(form.email, 'Adresse email') }}{{ form_widget(form.email) }}
-			</div>
-			<div id="validate-container">
-				<input value="Créer mon compte" type="submit" />
+	<ul class="breadcrumb">
+		<li>
+			<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Accueil</a> <span class="divider">/</span>
+		</li>
+		<li class="active">Créer un compte</li>
+	</ul>
+
+	<section id="login">
+		<h2>Créer un compte</h2>
+		<div class="row">
+			<div class="span12">
+				<form class="form-horizontal" action="{{ path('MTIMusicAndMeBundle_create') }}" method="post" {{ form_enctype(form) }}>
+					<fieldset>
+						<legend>Entrez vos informations personnelles</legend>
+						<div class="control-group{% if form_errors(form.email) %} error{% endif %}">
+							{{ form_label(form.email, 'Adresse email', { 'attr': {'class': 'control-label'}}) }}
+							<div class="controls">
+								{{ form_widget(form.email, { 'attr': {'class': 'input-xlarge'}}) }}
+								{% if form_errors(form.email) %}{{ form_errors(form.email) }}{% endif %}
+							</div>
+						</div>
+						<div class="control-group{% if form_errors(form.password) %} error{% endif %}">
+							{{ form_label(form.password, 'Mot de passe', { 'attr': {'class': 'control-label'}}) }}
+							<div class="controls">
+								{{ form_widget(form.password, { 'attr': {'class': 'input-xlarge'}}) }}
+								{% if form_errors(form.password) %}{{ form_errors(form.password) }}{% endif %}
+							</div>
+						</div>
+						<div class="control-group{% if form_errors(form.firstname) %} error{% endif %}">
+							{{ form_label(form.firstname, 'Prénom', { 'attr': {'class': 'control-label'}}) }}
+							<div class="controls">
+								{{ form_widget(form.firstname, { 'attr': {'class': 'input-xlarge'}}) }}
+								{% if form_errors(form.firstname) %}{{ form_errors(form.firstname) }}{% endif %}
+							</div>
+						</div>
+						<div class="control-group{% if form_errors(form.lastname) %} error{% endif %}">
+							{{ form_label(form.lastname, 'Nom', { 'attr': {'class': 'control-label'}}) }}
+							<div class="controls">
+								{{ form_widget(form.lastname, { 'attr': {'class': 'input-xlarge'}}) }}
+								{% if form_errors(form.lastname) %}{{ form_errors(form.lastname) }}{% endif %}
+							</div>
+						</div>
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary">Créer mon compte</button>
+						</div>
+					</fieldset>
+				</form>
 			</div>
 		</div>
-	</form>
+	</section>
 {% endblock %}

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 	<head>
+		<meta charset="UTF-8" />
 		<title>{% block title %}Music &amp; Me{% endblock %}</title>
 		{% stylesheets
 		    '@MTIMusicAndMeBundle/Resources/public/css/*'
@@ -8,15 +9,22 @@
 		<link rel="stylesheet" href="{{ asset_url }}" />
 		{% endstylesheets %}
 	</head>
-	<body>
+	<body data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
 		{% block header %}
-			{% include 'MTIMusicAndMeBundle:UI:header.html.twig' %}
+			{% include 'MTIMusicAndMeBundle:Header:header.html.twig' with {'user_name': user_name, 'is_connected': is_connected} %}
 		{% endblock %}
-		<div class="contents">
+		<div class="container">
 		{% block content %}{% endblock %}
 		</div>
-		{% block footer %}
+		<!-- {% block footer %}
 			{% include 'MTIMusicAndMeBundle:UI:player.html.twig' %}
-		{% endblock %}
+		{% endblock %} -->
+		{% javascripts
+		    '@MTIMusicAndMeBundle/Resources/public/js/jquery-1.7.1.min.js'
+			'@MTIMusicAndMeBundle/Resources/public/js/bootstrap.js'
+			'@MTIMusicAndMeBundle/Resources/public/js/script.js'
+		%}
+		<script src="{{ asset_url }}"></script>
+		{% endjavascripts %}
 	</body>
 </html>
