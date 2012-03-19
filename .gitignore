@@ -34,6 +34,9 @@ Icon?
 Thumbs.db
 *.*~
 
+# Heavy files #
+###############
+*.psd
 
 # Symfony folders #
 ###################

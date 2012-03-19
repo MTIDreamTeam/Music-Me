@@ -39,3 +39,9 @@ MTI\MusicAndMeBundle\Entity\LoginUser:
             - Email:
                 message: L'email "{{ value }}" n'est pas valide
                 checkMX: false
+
+MTI\MusicAndMeBundle\Entity\Stream:
+    properties:
+        name:
+            - NotBlank:
+                message: Vous devez entrer le nom du flux à créer
