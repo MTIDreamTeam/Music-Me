@@ -3,6 +3,9 @@
 namespace MTI\MusicAndMeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+use MTI\MusicAndMeBundle\Entity\Stream;
 
 /**
  * @ORM\Entity
@@ -36,6 +39,11 @@ class User
      * @ORM\Column(type="string", length=100)
      */
     protected $password;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="Stream", mappedBy="user")
+	 */
+	protected $streams;
 
     /**
      * Get id
@@ -125,5 +133,29 @@ class User
     public function getPassword()
     {
         return $this->password;
+    }
+    public function __construct()
+    {
+        $this->streams = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add streams
+     *
+     * @param MTI\MusicAndMeBundle\Entity\Stream $streams
+     */
+    public function addStream(\MTI\MusicAndMeBundle\Entity\Stream $streams)
+    {
+        $this->streams[] = $streams;
+    }
+
+    /**
+     * Get streams
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getStreams()
+    {
+        return $this->streams;
     }
 }
