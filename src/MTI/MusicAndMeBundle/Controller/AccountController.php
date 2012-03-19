@@ -88,8 +88,10 @@ class AccountController extends Controller
 	
 	public function loginAction(Request $request)
 	{
+		$session = $this->get('session');
+		
 		if (Authentication::isAuthenticated($request))
-			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_account'));
+			return $this->redirect($this->generateUrl($session->get('nextRoute')));
 		
 		$user = new LoginUser();
 
@@ -147,11 +149,11 @@ class AccountController extends Controller
 					}
 				}
 				
-				$session = $this->get('session');
+				// Copies the requested in a new variable
 				$route = $session->get('nextRoute');
+				// return new Response($route);
 				$session->set('nextRoute', 'MTIMusicAndMeBundle_account');
 				$session->set('user_id', $registeredUser->getId());
-				// return new Response('route : ');
 				
 				return $this->redirect($this->generateUrl($route));
 			}
