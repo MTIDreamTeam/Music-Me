@@ -3,11 +3,13 @@
 namespace MTI\MusicAndMeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Events;
 
 use MTI\MusicAndMeBundle\Entity\User;
 
 /**
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="stream")
  */
 class Stream
@@ -23,12 +25,25 @@ class Stream
      * @ORM\Column(type="string", length=100)
      */
     protected $name;
+	
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="User", inversedBy="streams")
 	 * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
 	 */
     protected $owner;
+	
+	/**
+	 * @ORM\PrePersist
+	 */
+	public function onPrePersist()
+	{
+	    $this->created = new \DateTime();
+	}
 
     /**
      * Get id
@@ -78,5 +93,25 @@ class Stream
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    /**
+     * Set created
+     *
+     * @param datetime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * Get created
+     *
+     * @return datetime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
     }
 }

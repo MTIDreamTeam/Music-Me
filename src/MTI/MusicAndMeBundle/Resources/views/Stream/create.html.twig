@@ -1,0 +1,38 @@
+{% extends 'MTIMusicAndMeBundle:BaseHTML:base.html.twig' %}
+
+{% form_theme form 'MTIMusicAndMeBundle:Form:fields.html.twig' %}
+
+{% block content %}
+	<ul class="breadcrumb">
+		<li>
+			<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
+		</li>
+		<li>
+			<a href="{{ path('MTIMusicAndMeBundle_streamIndex') }}">Mes flux</a> <span class="divider">/</span>
+		</li>
+		<li class="active">Créer un flux</li>
+	</ul>
+	<section id="my-streams">
+		<div class="page-header">
+			<h1>Créer un flux</h1>
+		</div>
+		<div class="row">
+			<div class="span12">
+				<form class="form-horizontal" action="{{ path('MTIMusicAndMeBundle_streamCreate') }}" method="post" {{ form_enctype(form) }}>
+					<fieldset>
+						<div class="control-group{% if form_errors(form.name) %} error{% endif %}">
+							{{ form_label(form.name, 'Nom du flux', { 'attr': {'class': 'control-label'}}) }}
+							<div class="controls">
+								{{ form_widget(form.name, { 'attr': {'class': 'input-xlarge'}}) }}
+								{% if form_errors(form.name) %}{{ form_errors(form.name) }}{% endif %}
+							</div>
+						</div>
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary">Créer un nouveau flux</button>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</section>
+{% endblock %}

@@ -40,3 +40,7 @@ MTIMusicAndMeBundle_streamIndex:
 MTIMusicAndMeBundle_streamCreate:
     pattern:  /stream/create/
     defaults: { _controller: MTIMusicAndMeBundle:Stream:create }
+
+MTIMusicAndMeBundle_streamView:
+    pattern:  /stream/{stream_id}
+    defaults: { _controller: MTIMusicAndMeBundle:Stream:view, stream_id:-1 }

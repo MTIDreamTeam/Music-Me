@@ -13,27 +13,20 @@
 				<ul class="thumbnails">
 					<li class="span2">
 						<div class="thumbnail create-stream" data-placement="bottom" rel="popover" data-original-title="Créer un nouveau flux">
-							<a href="#"><img src="/images/add.png" alt="" /></a>
+							<a href="{{ path('MTIMusicAndMeBundle_streamCreate') }}"><img src="/images/add.png" alt="" /></a>
 						</div>
 					</li>
+					{% for stream in my_streams %}
 					<li class="span2">
 						<div class="thumbnail">
-							<a href="#"><img src="/images/cover.jpg" alt="" /></a>
+							<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ stream.id }}"><img src="/images/cover.jpg" alt="" /></a>
 							<div class="caption">
-								<h5>Titre du flux</h5>
+								<h5>{{ stream.name }}</h5>
 								<p>5 écoutes</p>
 							</div>
 						</div>
 					</li>
-					<li class="span2">
-						<div class="thumbnail">
-							<a href="#"><img src="/images/cover.jpg" alt="" /></a>
-							<div class="caption">
-								<h5>Titre du flux</h5>
-								<p>5 écoutes</p>
-							</div>
-						</div>
-					</li>
+					{% endfor %}
 				</ul>
 			</div>
 		</div>
@@ -46,8 +39,8 @@
 			<div class="span12">
 				<ul class="thumbnails">
 					<li class="span2">
-						<div class="thumbnail create-stream" rel="popover" data-original-title="Créer un nouveau flux">
-							<a href="#"><img src="/images/add.png" alt="" /></a>
+						<div class="thumbnail create-stream" data-placement="bottom" rel="popover" data-original-title="Créer un nouveau flux">
+							<a href="{{ path('MTIMusicAndMeBundle_streamCreate') }}"><img src="/images/add.png" alt="" /></a>
 						</div>
 					</li>
 					<li class="span2">
@@ -107,8 +100,8 @@
 			<div class="span12">
 				<ul class="thumbnails">
 					<li class="span2">
-						<div class="thumbnail create-stream" rel="popover" data-original-title="Créer un nouveau flux">
-							<a href="#"><img src="/images/add.png" alt="" /></a>
+						<div class="thumbnail create-stream" data-placement="bottom" rel="popover" data-original-title="Créer un nouveau flux">
+							<a href="{{ path('MTIMusicAndMeBundle_streamCreate') }}"><img src="/images/add.png" alt="" /></a>
 						</div>
 					</li>
 					<li class="span2">
