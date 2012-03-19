@@ -19,7 +19,12 @@ class Authentication
 		{
 			// Gets the user session
 			$session = $controller->get('session');
-			$route = $request->attributes->get('_route');
+			$route = $session->get('nextRoute');
+			$nextRoute = $request->attributes->get('_route');
+			
+			// var_dump($session->get('nextRoute'));
+			// var_dump($request->attributes->get('_route'));
+			// die();
 			
 			// Get the user Id
 			$userId = $session->get('user_id');
@@ -27,19 +32,15 @@ class Authentication
 			// If the user is not logged in
 			if ($userId == null)
 			{
-				// Deletes the session
-				$session->invalidate();
-				// Saves the original route to redirect after a successful login
-				$session->set('nextRoute', $route);
-					
-				return false;
-			}
-			else
-			{
-				if ($route == 'MTIMusicAndMeBundle_login');
+				if ($nextRoute != 'MTIMusicAndMeBundle_login')
 				{
-					$session->set('nextRoute', 'MTIMusicAndMeBundle_homepage');
+					
+					// Deletes the session
+					// $session->invalidate();
+					// Saves the original route to redirect after a successful login
+					$session->set('nextRoute', $nextRoute);
 				}
+				return false;
 			}
 		}
 		
