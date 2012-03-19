@@ -3,5 +3,13 @@
 {% block title %}{{ parent() }} - Mon compte ({{ user_name }}){% endblock %}
 
 {% block content %}
-	Hello {{ user_name }} !
+	<ul class="breadcrumb">
+		<li>
+			<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
+		</li>
+		<li class="active">Mon Compte</li>
+	</ul>
+	<section id="login">
+		Hello {{ user_name }} !
+	</section>
 {% endblock %}

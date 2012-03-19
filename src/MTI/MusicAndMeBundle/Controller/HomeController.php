@@ -19,9 +19,19 @@ class HomeController extends Controller
 		
 		$userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
 		
-        return $this->render('MTIMusicAndMeBundle:Home:index.html.twig', array(
-			'is_connected' => $user == null ? false : true,
-        	'user_name' => $userName,
-        ));
+		if ($userName)
+		{
+	        return $this->render('MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig', array(
+				'is_connected' => $user == null ? false : true,
+	        	'user_name' => $userName,
+	        ));
+		}
+		else
+		{
+	        return $this->render('MTIMusicAndMeBundle:Home:index.html.twig', array(
+				'is_connected' => $user == null ? false : true,
+	        	'user_name' => $userName,
+	        ));
+		}
     }
 }
