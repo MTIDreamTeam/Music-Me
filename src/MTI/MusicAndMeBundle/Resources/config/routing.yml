@@ -1,6 +1,13 @@
-MTIMusicAndMeBundle_hello:
-    pattern:  /hello/{name}
-    defaults: { _controller: MTIMusicAndMeBundle:Default:index }
+# Home Route #
+##############
+
+MTIMusicAndMeBundle_homepage:
+    pattern:  /
+    defaults: { _controller: MTIMusicAndMeBundle:Home:index }
+
+
+# Account Routes #
+##################
 
 MTIMusicAndMeBundle_account:
     pattern:  /account/
@@ -22,6 +29,14 @@ MTIMusicAndMeBundle_validate:
     pattern:  /account/validate/
     defaults: { _controller: MTIMusicAndMeBundle:Account:validate }
 
-MTIMusicAndMeBundle_homepage:
-    pattern:  /
-    defaults: { _controller: MTIMusicAndMeBundle:Home:index }
+
+# Stream Routes #
+#################
+
+MTIMusicAndMeBundle_streamIndex:
+    pattern:  /stream/
+    defaults: { _controller: MTIMusicAndMeBundle:Stream:index }
+
+MTIMusicAndMeBundle_streamCreate:
+    pattern:  /stream/create/
+    defaults: { _controller: MTIMusicAndMeBundle:Stream:create }
