@@ -44,3 +44,10 @@ MTIMusicAndMeBundle_streamCreate:
 MTIMusicAndMeBundle_streamView:
     pattern:  /stream/{stream_id}
     defaults: { _controller: MTIMusicAndMeBundle:Stream:view, stream_id:-1 }
+
+# Upload Routes #
+#################
+
+MTIMusicAndMeBundle_upload:
+    pattern:  /upload
+    defaults: { _controller: MTIMusicAndMeBundle:Upload:index }

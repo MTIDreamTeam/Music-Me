@@ -4,16 +4,32 @@ namespace MTI\MusicAndMeBundle\Controller;
 use MTI\MusicAndMeBundle\Entity\Musique;
 use MTI\MusicAndMeBundle\Entity\Artiste;
 use MTI\MusicAndMeBundle\Entity\Album;
+
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage;
 use Symfony\Component\HttpFoundation\File\File;
+
+use MTI\MusicAndMeBundle\Security\Authentication;
 
 class UploadController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+      if (!Authentication::isAuthenticated($request))
+	return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
+
+      $session = $this->get('session');
+      
+      $user = $this->getDoctrine()
+      ->getRepository('MTIMusicAndMeBundle:User')
+      ->find($session->get('user_id'));
+      $userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
+
+      
       $zik = new Musique();
-      $err = "";
 
       $formBuilder = $this->createFormBuilder($zik);
       $formBuilder->add('file');
@@ -30,10 +46,16 @@ class UploadController extends Controller
 	      || $zik->file->getMimeType() == "audio/mpeg") {
 		$this->saveZik($zik, true);
 	    }
-          return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_upload', array('form' => $form->createView(), 'err' => $err)));
         }
-    }
-      return $this->render('MTIMusicAndMeBundle:Upload:index.html.twig', array('form' => $form->createView()));
+      }
+      return $this->render(
+	'MTIMusicAndMeBundle:Upload:index.html.twig',
+	array(
+	  'is_connected' => $user == null ? false : true,
+	  'user_name' => $userName,
+	  'form' => $form->createView(),
+	)
+      );
     }
 
     public function parseZip($file, $loc)
