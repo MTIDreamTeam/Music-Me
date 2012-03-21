@@ -34,10 +34,10 @@ class Musique
     public $year;
 
     /**
-     * @ORM\Column(name="duree", type="string", nullable=true, length=255)
+     * @ORM\Column(name="duree", type="integer", nullable=true)
      */
     public $duree;
-    
+
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -53,6 +53,20 @@ class Musique
      */
     public $album;
 
+    static public  function dureeToSec($str)
+    {
+      list($min, $sec) = explode(':', $str);
+      $total = $min * 60 + $sec;
+      return $total;
+    }
+
+    static public  function  secToDuree($sec)
+    {
+	$min = $sec / 60;
+	$rest = $sec % $min;
+	$duree = $min.":".$rest;
+	return $duree;
+    }
 
     public function getAbsolutePath()
     {
@@ -81,21 +95,23 @@ class Musique
       if (null === $this->file) {
 	return;
       }
-      
+
       $getid3 = new \getID3_getID3();
       $getid3->encoding = 'UTF-8';
       $info = $getid3->Analyze($this->file);
-      
+
       if (isset($getid3->info['tags']['id3v2']))
       {
-	echo 'ok';
+
 	$this->title = $getid3->info['tags']['id3v2']['title'][0];
 	$this->year = $getid3->info['tags']['id3v2']['year'][0];
-	$this->duree = $getid3->info['playtime_string'];
+
+	$test = $this->dureeToSec($getid3->info['playtime_string']);
+	$this->duree = $this->dureeToSec($getid3->info['playtime_string']);
 	$this->genre = $getid3->info['tags']['id3v2']['genre'][0];
-	
+
 	$this->album = $alb;
-	
+
 	$this->album->title = $getid3->info['tags']['id3v2']['album'][0];
 	$this->album->artiste = $art;
 	$this->album->artiste->name = $getid3->info['tags']['id3v2']['artist'][0];
@@ -119,7 +135,7 @@ class Musique
 	  $this->album->artiste->name = $getid3->info['tags']['id3v1']['artist'][0];
 	}
       }
-      
+
     }
     public function save()
     {
@@ -145,7 +161,7 @@ class Musique
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -165,7 +181,7 @@ class Musique
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -185,7 +201,7 @@ class Musique
     /**
      * Get genre
      *
-     * @return string 
+     * @return string
      */
     public function getGenre()
     {
@@ -205,7 +221,7 @@ class Musique
     /**
      * Get year
      *
-     * @return integer 
+     * @return integer
      */
     public function getYear()
     {
@@ -225,7 +241,7 @@ class Musique
     /**
      * Get duree
      *
-     * @return string 
+     * @return string
      */
     public function getDuree()
     {
@@ -245,7 +261,7 @@ class Musique
     /**
      * Get path
      *
-     * @return string 
+     * @return string
      */
     public function getPath()
     {
@@ -265,7 +281,7 @@ class Musique
     /**
      * Get album
      *
-     * @return MTI\MusicAndMeBundle\Entity\Album 
+     * @return MTI\MusicAndMeBundle\Entity\Album
      */
     public function getAlbum()
     {
