@@ -4,7 +4,7 @@ namespace MTI\MusicAndMeBundle\Controller;
 use MTI\MusicAndMeBundle\Entity\Musique;
 use MTI\MusicAndMeBundle\Entity\Artiste;
 use MTI\MusicAndMeBundle\Entity\Album;
-
+use MTI\MusicAndMeBundle\Entity\User;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +38,6 @@ class UploadController extends Controller
         $form->bindRequest($this->getRequest());
 	    if ($zik->file->getMimeType() == "application/zip")
 	    {
-	      echo $this->getRequest()->getMethod();
 	      $this->parseZip($zik->file, $zik->getUploadRootDir());
 	    }
 	    else if ($zik->file->getMimeType() == "audio/mp4"
@@ -68,7 +67,7 @@ class UploadController extends Controller
 	  try
 	  {
 	  
-	  echo "Unpacking ".zip_entry_name($zip_entry)."<br>";
+	  //echo "Unpacking ".zip_entry_name($zip_entry)."<br>";
 	 
 	  
 	  if(strpos(zip_entry_name($zip_entry), DIRECTORY_SEPARATOR) !== false)
@@ -150,7 +149,7 @@ class UploadController extends Controller
       
       if (!$artiste) {
 	mkdir($zik->getUploadRootDir()."/".$art->name, 0755, true) or die("Unable to create\n");
-	echo "create artiste<br>";
+	//echo "create artiste<br>";
 	$em->persist($art);
       }
       else
@@ -165,7 +164,7 @@ class UploadController extends Controller
       if (!$album) {
 	$alb->artiste = $art;
 	mkdir($zik->getUploadRootDir()."/".$art->name."/".$alb->title, 0755, true) or die("Unable to create\n");
-	echo "create album<br>";
+	//echo "create album<br>";
 	$em->persist($alb);
       }
       else {

@@ -2,17 +2,31 @@
 
 {% block content %}
 <ul class="breadcrumb">
-<li class="active">Music &amp; Me</li>
+<li>
+<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
+</li>
+<li class="active">Upload</li>
 </ul>
 
-<section id="fluidGridSystem">
+<section id="Upload">
+		<h2>Upload de musiques</h2>
+		<div class="row">
+			<div class="span12">
+				<form class="form-horizontal" action="#" method="post" {{ form_enctype(form) }}>
+				<fieldset>
+				<legend>Choisissez votre musique ou un zip en contenant</legend>
+				<br>
+							<div class="controls">
+								{{ form_widget(form.file, { 'attr': {'class': 'input-xlarge'}}) }}
+							</div>
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary">Envoyer</button>
+						</div>
+				
+				</fieldset>
+				</form>
+			</div>
+		</div>
+	</section>
 
-  <form action="#" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
-
-  <input type="submit" />
-  </form>
-
-
-</section>
 {% endblock %}

@@ -80,7 +80,9 @@ class AccountController extends Controller
 			return $this->render(
 				'MTIMusicAndMeBundle:Account:create.html.twig',
 				array(
-					'form' => $form->createView()
+					'form' => $form->createView(),
+					'user_name' => null,
+					'is_connected' => null,
 				)
 			);
 		}
@@ -101,6 +103,7 @@ class AccountController extends Controller
 		$form = $this->createFormBuilder($user)->add('email', 'email')
 												->add('password', 'password')
 												->getForm();
+		$userName = null;
 		
 		if ($request->getMethod() == 'POST')
 		{
@@ -168,7 +171,9 @@ class AccountController extends Controller
 			return $this->render(
 				'MTIMusicAndMeBundle:Account:login.html.twig',
 				array(
-					'form' => $form->createView()
+					'form' => $form->createView(),
+					'is_connected' => null,
+					'user_name' => $userName,
 				)
 			);
 		}

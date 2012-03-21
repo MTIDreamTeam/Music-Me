@@ -34,7 +34,7 @@ class Musique
     public $year;
 
     /**
-     * @ORM\Column(name="duree", type="string", nullable=true, length=255)
+     * @ORM\Column(name="duree", type="integer", nullable=true)
      */
     public $duree;
     
@@ -53,7 +53,21 @@ class Musique
      */
     public $album;
 
+    static public  function dureeToSec($str)
+    {
+      list($min, $sec) = explode(':', $str);
+      $total = $min * 60 + $sec;
+      return $total;
+    }
 
+    static public  function  secToDuree($sec)
+    {
+	$min = $sec / 60;
+	$rest = $sec % $min;
+	$duree = $min.":".$rest;
+	return $duree;
+    }
+    
     public function getAbsolutePath()
     {
         return null === $this->path ? null : $this->getUploadRootDir().'/'.$this->path;
@@ -88,12 +102,14 @@ class Musique
       
       if (isset($getid3->info['tags']['id3v2']))
       {
-	echo 'ok';
+	
 	$this->title = $getid3->info['tags']['id3v2']['title'][0];
 	$this->year = $getid3->info['tags']['id3v2']['year'][0];
-	$this->duree = $getid3->info['playtime_string'];
+
+	$test = $this->dureeToSec($getid3->info['playtime_string']);
+	$this->duree = $this->dureeToSec($getid3->info['playtime_string']);
 	$this->genre = $getid3->info['tags']['id3v2']['genre'][0];
-	
+
 	$this->album = $alb;
 	
 	$this->album->title = $getid3->info['tags']['id3v2']['album'][0];
