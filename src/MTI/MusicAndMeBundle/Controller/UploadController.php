@@ -34,20 +34,19 @@ class UploadController extends Controller
       $formBuilder = $this->createFormBuilder($zik);
       $formBuilder->add('file');
       $form = $formBuilder->getForm();
-      
       if ($this->getRequest()->getMethod() === 'POST') {
         $form->bindRequest($this->getRequest());
-        if ($form->isValid()) {
 	    if ($zik->file->getMimeType() == "application/zip")
 	    {
+	      echo $this->getRequest()->getMethod();
 	      $this->parseZip($zik->file, $zik->getUploadRootDir());
 	    }
 	    else if ($zik->file->getMimeType() == "audio/mp4"
 	      || $zik->file->getMimeType() == "audio/mpeg") {
 		$this->saveZik($zik, true);
-	    }
-        }
+	    }   
       }
+
       return $this->render(
 	'MTIMusicAndMeBundle:Upload:index.html.twig',
 	array(
@@ -70,17 +69,19 @@ class UploadController extends Controller
 	  {
 	  
 	  echo "Unpacking ".zip_entry_name($zip_entry)."<br>";
-
+	 
 	  
 	  if(strpos(zip_entry_name($zip_entry), DIRECTORY_SEPARATOR) !== false)
 	  {
+	  
 	    $last = strrpos(zip_entry_name($zip_entry), DIRECTORY_SEPARATOR);
 	    
 	    $dir = substr(zip_entry_name($zip_entry), 0, $last);
 	    
 	    $dir = $loc."/".$dir;
-	    
+
 	    $file = substr(zip_entry_name($zip_entry), strrpos(zip_entry_name($zip_entry), DIRECTORY_SEPARATOR)+1);
+	 
 	    /*if(!is_dir($dir))
 	    {
 	      mkdir($dir, 0755, true) or die("Unable to create $dir\n");
@@ -106,10 +107,12 @@ class UploadController extends Controller
 	  }
 	  else
 	  {
-	    $zik = new Musique();
+	
 	    if(substr(zip_entry_name($zip_entry), -3, 3) == "mp3")
 	    {
-	      file_put_contents($file, zip_entry_read($zip_entry, zip_entry_filesize($zip_entry)));
+	      $zik = new Musique();
+	      $file = zip_entry_name($zip_entry);
+	      file_put_contents($loc."/".$file, zip_entry_read($zip_entry, zip_entry_filesize($zip_entry)));
 	      $zik->file = new File($loc."/".$file);
 	      $zik->path = $file;
 	      $this->saveZik($zik, false);
