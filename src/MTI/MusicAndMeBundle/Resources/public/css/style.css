@@ -315,4 +315,25 @@ div.spinner div.bar12 {
 	vertical-align: middle;
 }
 
+
+.multi-cover-table{
+  border-collapse:collapse;
+  padding:0px;
+  margin:0px;
+  border:none;
+}
+
+.multi-cover-table td{
+  padding:1px;
+  margin:1px;
+  border:none;
+}
+
+.multi-cover-table tr{
+  border:none;
+}
+
+#search_text{
+  font-size:14px;
+}
 /* @end */

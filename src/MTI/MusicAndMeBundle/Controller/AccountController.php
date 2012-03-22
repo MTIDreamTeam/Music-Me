@@ -18,15 +18,15 @@ class AccountController extends Controller
 	{
 		if (!Authentication::isAuthenticated($request))
 			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
-		
+
 		$session = $this->get('session');
-		
+
 		$user = $this->getDoctrine()
 						->getRepository('MTIMusicAndMeBundle:User')
 						->find($session->get('user_id'));
-		
+
 		$userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
-		
+
 		return $this->render(
 			'MTIMusicAndMeBundle:Account:index.html.twig',
 			array(
@@ -35,26 +35,26 @@ class AccountController extends Controller
 			)
 		);
 	}
-	
+
 	public function createAction(Request $request)
 	{
 		if (Authentication::isAuthenticated($request))
 			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_account'));
-		
+
 		$user = new User();
 		$form = $this->createFormBuilder($user)->add('firstname', 'text')
 												->add('lastname', 'text')
 												->add('email', 'email')
 												->add('password', 'password')
 												->getForm();
-		
+
 		if ($request->getMethod() == 'POST')
 		{
 			$form->bindRequest($request);
-			
+
 			$validator = $this->get('validator');
 			$errors = $validator->validate($user);
-		
+
 			if (count($errors) > 0)
 			{
 				return $this->render(
@@ -67,11 +67,11 @@ class AccountController extends Controller
 			else
 			{
 				$user->setPassword(md5($user->getEmail() . $user->getPassword()));
-				
+
 				$em = $this->getDoctrine()->getEntityManager();
 				$em->persist($user);
 				$em->flush();
-				
+
 				return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_account'));
 			}
 		}
@@ -80,12 +80,14 @@ class AccountController extends Controller
 			return $this->render(
 				'MTIMusicAndMeBundle:Account:create.html.twig',
 				array(
-					'form' => $form->createView()
+					'form' => $form->createView(),
+					'user_name' => null,
+					'is_connected' => null,
 				)
 			);
 		}
 	}
-	
+
 	public function loginAction(Request $request)
 	{
 		// return new Response($this->get('session')->get('nextRoute') . ' ' . $request->attributes->get('_route'));
@@ -95,17 +97,18 @@ class AccountController extends Controller
 			return $this->redirect($this->generateUrl($this->get('session')->get('nextRoute')));
 		}
 		// return new Response($this->get('session')->get('nextRoute') . ' ' . $request->attributes->get('_route'));
-		
+
 		$user = new LoginUser();
 
 		$form = $this->createFormBuilder($user)->add('email', 'email')
 												->add('password', 'password')
 												->getForm();
-		
+		$userName = null;
+
 		if ($request->getMethod() == 'POST')
 		{
 			$form->bindRequest($request);
-			
+
 			$validator = $this->get('validator');
 			$errors = $validator->validate($user);
 
@@ -125,7 +128,7 @@ class AccountController extends Controller
 				$results = $this->getDoctrine()
 								->getRepository('MTIMusicAndMeBundle:User')
 								->findBy(array('email' => $form->getData()->getEmail()));
-				
+
 				if (count($results) == 0)
 				{
 					return $this->render(
@@ -151,15 +154,15 @@ class AccountController extends Controller
 						);
 					}
 				}
-				
+
 				$route = $this->get('session')->get('nextRoute');
 				// In case the user goes directly to the login page
 				if ($route == '')
 					$route = 'MTIMusicAndMeBundle_homepage';
-				
+
 				$this->get('session')->set('user_id', $registeredUser->getId());
 				// return new Response($route);
-				
+
 				return $this->redirect($this->generateUrl($route));
 			}
 		}
@@ -168,12 +171,14 @@ class AccountController extends Controller
 			return $this->render(
 				'MTIMusicAndMeBundle:Account:login.html.twig',
 				array(
-					'form' => $form->createView()
+					'form' => $form->createView(),
+					'is_connected' => null,
+					'user_name' => $userName,
 				)
 			);
 		}
 	}
-	
+
 	public function logoutAction(Request $request)
 	{
 		// Log the user out
@@ -181,7 +186,7 @@ class AccountController extends Controller
 		$session->set('user_id', null);
 		$session->invalidate();
 		$this->get("security.context")->setToken(null);
-		
+
 		return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_homepage'));
 	}
 }

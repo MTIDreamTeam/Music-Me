@@ -3,11 +3,12 @@ namespace MTI\MusicAndMeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Component\DependencyInjection\SimpleXMLElement;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="MTI\MusicAndMeBundle\Entity\MusiqueRepository")
  */
 class Musique
 {
@@ -68,6 +69,24 @@ class Musique
 	return $duree;
     }
 
+    public function getCover()
+    {
+      $xml_request_url = 'http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=b25b959554ed76058ac220b7b2e0a026&artist='
+      .urlencode($this->album->artiste->name).'&album='.urlencode($this->album->title);
+      $xml = new SimpleXMLElement($xml_request_url, null, true);
+      
+      if ($xml->getName() == "lfm")
+      {
+	foreach($xml->attributes() as $a => $b) {
+	  if ($b != "ok")
+	    return;
+	}
+	$children = $xml->children()->children();
+	echo $children->image[0];
+	return;
+      }     
+    }
+    
     public function getAbsolutePath()
     {
         return null === $this->path ? null : $this->getUploadRootDir().'/'.$this->path;
