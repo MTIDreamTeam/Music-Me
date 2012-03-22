@@ -53,6 +53,11 @@ class Musique
      */
     public $album;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="StreamRecords", mappedBy="user")
+	 */
+	protected $streamRecords;
+
     static public  function dureeToSec($str)
     {
       list($min, $sec) = explode(':', $str);
@@ -301,5 +306,29 @@ class Musique
     public function getAlbum()
     {
         return $this->album;
+    }
+    public function __construct()
+    {
+        $this->streamRecords = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add streamRecords
+     *
+     * @param MTI\MusicAndMeBundle\Entity\StreamRecords $streamRecords
+     */
+    public function addStreamRecords(\MTI\MusicAndMeBundle\Entity\StreamRecords $streamRecords)
+    {
+        $this->streamRecords[] = $streamRecords;
+    }
+
+    /**
+     * Get streamRecords
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getStreamRecords()
+    {
+        return $this->streamRecords;
     }
 }

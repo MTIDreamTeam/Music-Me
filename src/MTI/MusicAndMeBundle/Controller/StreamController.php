@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage;
 
 use MTI\MusicAndMeBundle\Entity\Stream;
+use MTI\MusicAndMeBundle\Entity\StreamRecords;
 use MTI\MusicAndMeBundle\Entity\User;
 use MTI\MusicAndMeBundle\Entity\LoginUser;
 use MTI\MusicAndMeBundle\Security\Authentication;
@@ -90,13 +91,7 @@ class StreamController extends Controller
 					$em->persist($stream);
 					$em->flush();
 					
-					return $this->render(
-						'MTIMusicAndMeBundle:Stream:index.html.twig',
-						array(
-							'is_connected' => $user == null ? false : true,
-							'user_name' => $userName,
-						)
-					);
+					return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_streamIndex'));
 				}
 				else
 				{
@@ -137,7 +132,7 @@ class StreamController extends Controller
 			);
 		}
 	}
-	
+
 	public function viewAction(Request $request)
 	{
 		$streamId = $request->attributes->get('stream_id');
@@ -148,8 +143,8 @@ class StreamController extends Controller
 		$session = $this->get('session');
 		
 		$user = $this->getDoctrine()
-						->getRepository('MTIMusicAndMeBundle:User')
-						->find($session->get('user_id'));
+					 ->getRepository('MTIMusicAndMeBundle:User')
+					 ->find($session->get('user_id'));
 		
 		$userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
 		
@@ -157,6 +152,19 @@ class StreamController extends Controller
 					   ->getRepository('MTIMusicAndMeBundle:Stream')
 					   ->findOneById($streamId);
 		
+		$streamRecords = $this->getDoctrine()
+							  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+							  ->findByStream($streamId);
+
+		$lastRecord = $streamRecords[0];
+		$date = new \DateTime();
+		var_dump($lastRecord->isPlaying());
+		die();
+		
+		$votes = $this->getDoctrine()
+					  ->getRepository('MTIMusicAndMeBundle:Vote')
+					  ->findByStream($streamId);
+
 		return $this->render(
 			'MTIMusicAndMeBundle:Stream:view.html.twig',
 			array(

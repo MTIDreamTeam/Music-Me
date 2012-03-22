@@ -36,7 +36,12 @@ class Stream
 	 * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
 	 */
     protected $owner;
-	
+
+	/**
+	 * @ORM\OneToMany(targetEntity="StreamRecords", mappedBy="stream")
+	 */
+	protected $streamRecords;
+
 	/**
 	 * @ORM\PrePersist
 	 */
@@ -113,5 +118,29 @@ class Stream
     public function getCreated()
     {
         return $this->created;
+    }
+    public function __construct()
+    {
+        $this->streamRecords = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add streamRecords
+     *
+     * @param MTI\MusicAndMeBundle\Entity\StreamRecords $streamRecords
+     */
+    public function addStreamRecords(\MTI\MusicAndMeBundle\Entity\StreamRecords $streamRecords)
+    {
+        $this->streamRecords[] = $streamRecords;
+    }
+
+    /**
+     * Get streamRecords
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getStreamRecords()
+    {
+        return $this->streamRecords;
     }
 }
