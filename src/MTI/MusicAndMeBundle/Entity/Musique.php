@@ -3,7 +3,6 @@ namespace MTI\MusicAndMeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\DependencyInjection\SimpleXMLElement;
 
 
 /**
@@ -40,13 +39,13 @@ class Musique
     public $duree;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     public $path;
 
     /**
      * @Assert\File(maxSize="100000000000000")
-     */
+     */ 
     public $file;
 
     /**
@@ -69,23 +68,7 @@ class Musique
 	return $duree;
     }
 
-    public function getCover()
-    {
-      $xml_request_url = 'http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=b25b959554ed76058ac220b7b2e0a026&artist='
-      .urlencode($this->album->artiste->name).'&album='.urlencode($this->album->title);
-      $xml = new SimpleXMLElement($xml_request_url, null, true);
-      
-      if ($xml->getName() == "lfm")
-      {
-	foreach($xml->attributes() as $a => $b) {
-	  if ($b != "ok")
-	    return;
-	}
-	$children = $xml->children()->children();
-	echo $children->image[0];
-	return;
-      }     
-    }
+     
     
     public function getAbsolutePath()
     {
@@ -103,58 +86,64 @@ class Musique
         return __DIR__.'/../../../../web/'.$this->getUploadDir();
     }
 
-    protected function getUploadDir()
+    public function getUploadDir()
     {
         // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
         return 'uploads/musique';
     }
 
+
     public function upload($art, $alb)
     {
-      if (null === $this->file) {
-	return;
-      }
-
-      $getid3 = new \getID3_getID3();
-      $getid3->encoding = 'UTF-8';
-      $info = $getid3->Analyze($this->file);
-
-      if (isset($getid3->info['tags']['id3v2']))
-      {
-
-	$this->title = $getid3->info['tags']['id3v2']['title'][0];
-	$this->year = $getid3->info['tags']['id3v2']['year'][0];
-
-	$test = $this->dureeToSec($getid3->info['playtime_string']);
-	$this->duree = $this->dureeToSec($getid3->info['playtime_string']);
-	$this->genre = $getid3->info['tags']['id3v2']['genre'][0];
-
-	$this->album = $alb;
-
-	$this->album->title = $getid3->info['tags']['id3v2']['album'][0];
-	$this->album->artiste = $art;
-	$this->album->artiste->name = $getid3->info['tags']['id3v2']['artist'][0];
-      }
-      else if (isset($getid3->info['tags']['id3v1']))
-      {
-	if (isset($getid3->info['tags']['id3v1']['title']) &&
-	  isset($getid3->info['tags']['id3v1']['genre']) &&
-	  isset($getid3->info['tags']['id3v1']['year']) &&
-	  isset($getid3->info['tags']['id3v1']['album']) &&
-	  isset($getid3->info['tags']['id3v1']['artist']))
-	{
-	  $this->title = $getid3->info['tags']['id3v1']['title'][0];
-	  $this->year = $getid3->info['tags']['id3v1']['year'][0];
-	  $this->duree = $getid3->info['playtime_string'];
-	  $this->genre = $getid3->info['tags']['id3v1']['genre'][0];
-
-	  $this->album = $alb;
-	  $this->album->title = $getid3->info['tags']['id3v1']['album'][0];
-	  $this->album->artiste = $art;
-	  $this->album->artiste->name = $getid3->info['tags']['id3v1']['artist'][0];
+	if (null === $this->file) {
+		return;
 	}
-      }
 
+	$getid3 = new \getID3_getID3();
+	$getid3->encoding = 'UTF-8';
+	$info = $getid3->Analyze($this->file);
+
+	if (isset($getid3->info['tags']['id3v2']))
+	{
+		if (isset($getid3->info['tags']['id3v2']['title']) &&
+		isset($getid3->info['tags']['id3v2']['genre']) &&
+		isset($getid3->info['tags']['id3v2']['year']) &&
+		isset($getid3->info['tags']['id3v2']['album']) &&
+		isset($getid3->info['tags']['id3v2']['artist']))
+		{
+			$this->title = $getid3->info['tags']['id3v2']['title'][0];
+			$this->year = $getid3->info['tags']['id3v2']['year'][0];
+
+			$test = $this->dureeToSec($getid3->info['playtime_string']);
+			$this->duree = $this->dureeToSec($getid3->info['playtime_string']);
+			$this->genre = $getid3->info['tags']['id3v2']['genre'][0];
+
+			$this->album = $alb;
+
+			$this->album->title = $getid3->info['tags']['id3v2']['album'][0];
+			$this->album->artiste = $art;
+			$this->album->artiste->name = $getid3->info['tags']['id3v2']['artist'][0];
+		}
+	}
+	else if (isset($getid3->info['tags']['id3v1']))
+	{
+		if (isset($getid3->info['tags']['id3v1']['title']) &&
+		isset($getid3->info['tags']['id3v1']['genre']) &&
+		isset($getid3->info['tags']['id3v1']['year']) &&
+		isset($getid3->info['tags']['id3v1']['album']) &&
+		isset($getid3->info['tags']['id3v1']['artist']))
+		{
+			$this->title = $getid3->info['tags']['id3v1']['title'][0];
+			$this->year = $getid3->info['tags']['id3v1']['year'][0];
+			$this->duree = $getid3->info['playtime_string'];
+			$this->genre = $getid3->info['tags']['id3v1']['genre'][0];
+
+			$this->album = $alb;
+			$this->album->title = $getid3->info['tags']['id3v1']['album'][0];
+			$this->album->artiste = $art;
+			$this->album->artiste->name = $getid3->info['tags']['id3v1']['artist'][0];
+		}
+	}
     }
     public function save()
     {
@@ -276,7 +265,7 @@ class Musique
     {
         $this->path = $path;
     }
-
+    
     /**
      * Get path
      *
@@ -284,7 +273,7 @@ class Musique
      */
     public function getPath()
     {
-        return $this->path;
+	    return $this->path;
     }
 
     /**

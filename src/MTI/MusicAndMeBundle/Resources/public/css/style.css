@@ -334,6 +334,18 @@ div.spinner div.bar12 {
 }
 
 #search_text{
-  font-size:14px;
+  font-size:14%;
+}
+
+#search-zik td, #search-zik th {
+	vertical-align: middle;
+}
+
+#search-zik td:last-child, #search-zik th:last-child {
+	text-align: right !important;
+}
+
+#search-zik td li, #search-zik td ul {
+	vertical-align: middle;
 }
 /* @end */
