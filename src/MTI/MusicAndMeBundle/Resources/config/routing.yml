@@ -46,8 +46,8 @@ MTIMusicAndMeBundle_streamView:
     defaults: { _controller: MTIMusicAndMeBundle:Stream:view, stream_id:-1 }
 
 MTIMusicAndMeBundle_search:
-    pattern:  /search/{toSearch}
-    defaults: { _controller: MTIMusicAndMeBundle:Search:index, toSearch:# }
+    pattern:  /search
+    defaults: { _controller: MTIMusicAndMeBundle:Search:index }
 
 # Upload Routes #
 #################
@@ -55,3 +55,10 @@ MTIMusicAndMeBundle_search:
 MTIMusicAndMeBundle_upload:
     pattern:  /upload
     defaults: { _controller: MTIMusicAndMeBundle:Upload:index }
+
+# Musiques Routes #
+###################
+
+MTIMusicAndMeBundle_searchZik:
+    pattern:  /searchzik
+    defaults: { _controller: MTIMusicAndMeBundle:SearchZik:index }

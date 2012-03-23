@@ -21,6 +21,7 @@ class UploadController extends Controller
       if (!Authentication::isAuthenticated($request))
 	return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
 
+      
       $session = $this->get('session');
       
       $user = $this->getDoctrine()
@@ -149,7 +150,9 @@ class UploadController extends Controller
       
       if (!$artiste) {
 	mkdir($zik->getUploadRootDir()."/".$art->name, 0755, true) or die("Unable to create\n");
-	//echo "create artiste<br>";
+	if (is_dir($zik->getUploadRootDir()."/covers")
+		mkdir($zik->getUploadRootDir()."/covers", 0755, true) or die("Unable to create\n");
+	mkdir($zik->album->getCoverRootDir()."/".$art->name, 0755, true) or die("Unable to create\n");
 	$em->persist($art);
       }
       else
@@ -160,11 +163,24 @@ class UploadController extends Controller
       ->getEntityManager()
       ->getRepository('MTIMusicAndMeBundle:Album');
       $album = $repository->findOneBy(array('title' => $alb->title));
-      
       if (!$album) {
 	$alb->artiste = $art;
 	mkdir($zik->getUploadRootDir()."/".$art->name."/".$alb->title, 0755, true) or die("Unable to create\n");
-	//echo "create album<br>";
+	$cover = $zik->album->getCover();
+
+	if (isset($cover) && $cover != null && $cover != "")
+	{
+		$ext = substr($cover, -3, 3);
+		if ($ext == "epg")
+			$ext = "jpeg";
+		$zik->album->coverPath = $zik->album->getCoverRootDir()."/".$art->name."/".$alb->title.".".$ext;
+		copy($cover, $zik->album->coverPath);
+		$zik->album->coverPath = $zik->album->getCoverDir()."/".$art->name."/".$alb->title.".".$ext;
+	}
+	else
+	{
+		$zik->album->coverPath = "";
+	}
 	$em->persist($alb);
       }
       else {
