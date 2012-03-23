@@ -46,3 +46,6 @@ app/config/parameters.ini
 app/config/config.ini
 web/css
 web/js
+web/uploads
+web/covers
+web/cover
