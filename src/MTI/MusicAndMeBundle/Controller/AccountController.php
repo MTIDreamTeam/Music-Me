@@ -90,13 +90,8 @@ class AccountController extends Controller
 	
 	public function loginAction(Request $request)
 	{
-		// return new Response($this->get('session')->get('nextRoute') . ' ' . $request->attributes->get('_route'));
 		if (Authentication::isAuthenticated($request))
-		{
-			// return new Response($this->get('session')->get('nextRoute'));
 			return $this->redirect($this->generateUrl($this->get('session')->get('nextRoute')));
-		}
-		// return new Response($this->get('session')->get('nextRoute') . ' ' . $request->attributes->get('_route'));
 		
 		$user = new LoginUser();
 
