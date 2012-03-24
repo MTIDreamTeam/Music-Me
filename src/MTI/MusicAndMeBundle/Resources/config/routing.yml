@@ -45,6 +45,13 @@ MTIMusicAndMeBundle_streamView:
     pattern:  /stream/{stream_id}
     defaults: { _controller: MTIMusicAndMeBundle:Stream:view, stream_id:-1 }
 
+MTIMusicAndMeBundle_streamVote:
+    pattern:  /stream/vote/
+    defaults: { _controller: MTIMusicAndMeBundle:Stream:vote, _format: json }
+    requirements:
+        _format: json
+        _method: POST
+
 MTIMusicAndMeBundle_search:
     pattern:  /search/{toSearch}
     defaults: { _controller: MTIMusicAndMeBundle:Search:index, toSearch:# }

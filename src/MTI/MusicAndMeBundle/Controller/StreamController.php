@@ -158,12 +158,20 @@ class StreamController extends Controller
 
 		$lastRecord = $streamRecords[0];
 		$date = new \DateTime();
-		var_dump($lastRecord->isPlaying());
-		die();
 		
-		$votes = $this->getDoctrine()
-					  ->getRepository('MTIMusicAndMeBundle:Vote')
-					  ->findByStream($streamId);
+		$repo = $this->getDoctrine()
+					 ->getRepository('MTIMusicAndMeBundle:Vote');
+		
+		// $query = $repository->createQueryBuilder('vote')
+		// 					->where('vote.created > ' . $lastRecord->getPlayed());
+		
+		// var_dump($lastRecord->isPlaying());
+		
+		// die();
+		
+		// $votes = $this->getDoctrine()
+		// 			  ->getRepository('MTIMusicAndMeBundle:Vote')
+		// 			  ->findByStream($streamId);
 
 		return $this->render(
 			'MTIMusicAndMeBundle:Stream:view.html.twig',
@@ -173,5 +181,39 @@ class StreamController extends Controller
 				'stream' => $stream,
 			)
 		);
+	}
+	
+	public function voteAction(Request $request)
+	{
+		// return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_homepage'));
+		$data = json_decode($request()->getContent(), true);
+		
+		$music = $this->getDoctrine()
+					  ->getRepository('MTIMusicAndMeBundle:Musique')
+					  ->findOneById($data['music']);
+		if ($music == null)
+			return new Response(json_encode(array('error' => 'La musique demandée pour le vote n\'existe pas')));
+		
+		$now = new \DateTime();
+		$endMusic = new \DateTime();
+		$endMusic->setTimestamp($now->getTimestamp() - $music->getDuree());
+		
+		$query = $this->getDoctrine()
+					  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+					  ->createQueryBuilder('record')
+					  ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+					  ->andWhere("record.played > '" . $endMusic->format('Y-m-d H:i:s') . "'")
+					  ->getQuery();
+		
+		$records = $query->getResult();
+		
+		// There is a song being played
+		if (count($records))
+		{
+			$playedSong = $records[0];
+			return new Response(json_encode(array($records[0]->getPlayed())));
+		}
+		
+		return new Response(json_encode(array('name' => 'plop')));
 	}
 }

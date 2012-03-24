@@ -51,11 +51,6 @@ class User
 	 */
 	protected $votes;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="Music", mappedBy="user")
-	 */
-	protected $musics;
-
     /**
      * @ORM\Column(type="datetime")
      */
@@ -202,5 +197,25 @@ class User
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * Add votes
+     *
+     * @param MTI\MusicAndMeBundle\Entity\Vote $votes
+     */
+    public function addVote(\MTI\MusicAndMeBundle\Entity\Vote $votes)
+    {
+        $this->votes[] = $votes;
+    }
+
+    /**
+     * Get votes
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getVotes()
+    {
+        return $this->votes;
     }
 }
