@@ -16,39 +16,45 @@ use MTI\MusicAndMeBundle\Security\Authentication;
 
 class SearchZikController extends Controller
 {
-  
+
   public function indexAction(Request $request)
   {
-	  $streamId = $request->attributes->get('stream_id');
-	  
+	$streamId = $request->query->get('stream_id');
     if (!Authentication::isAuthenticated($request))
       return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
-    
+
     $session = $this->get('session');
-    
+
     $user = $this->getDoctrine()
     ->getRepository('MTIMusicAndMeBundle:User')
     ->find($session->get('user_id'));
-    
+
+    $stream = $this->getDoctrine()
+    ->getRepository('MTIMusicAndMeBundle:Stream')
+    ->find($streamId);
+    if ($stream == null)
+	    return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_homepage'));
     $userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
-   
+
     if ($this->getRequest()->getMethod() === 'POST') {
       $toSearch = $request->request->get('searchZik');
-    
+
 
       $liste_zik = $this->getDoctrine()
       ->getEntityManager()
       ->getRepository('MTIMusicAndMeBundle:Musique')
       ->searchMusic($toSearch);
+      
       if ($liste_zik == null)
       {
 	return $this->render(
-	  'MTIMusicAndMeBundle:Search:viewSearchZiknull.html.twig',
+	  'MTIMusicAndMeBundle:Search:resultSearchZik.html.twig',
 	  array(
-	    'is_connected' => $user == null ? false : true,
-	    'user_name' => $userName,
-	    'toSearch' => $toSearch,
-		'stream_id' => $streamId
+		'is_connected' => $user == null ? false : true,
+		'user_name' => $userName,
+		'toSearch' => $toSearch,
+		'stream' => $stream,
+		'listeZik' => $liste_zik
 	  )
 	  );
       }
@@ -60,13 +66,12 @@ class SearchZikController extends Controller
 	    'user_name' => $userName,
 	    'toSearch' => $toSearch,
 	    'listeZik' => $liste_zik,
-		'stream_id' => $streamId
+	    'stream' => $stream
 	)
 	);
       }
-      
+
     }
-    
     else {
     return $this->render(
       'MTIMusicAndMeBundle:Search:viewSearchZik.html.twig',

@@ -5,7 +5,12 @@ MTIMusicAndMeBundle_homepage:
     pattern:  /
     defaults: { _controller: MTIMusicAndMeBundle:Home:index }
 
-
+MTIMusicAndMeBundle_header:
+    pattern:  /home/header/
+    defaults: { _controller: MTIMusicAndMeBundle:Account:getHeader, _format: json }
+    requirements:
+        _format: json
+        _method: POST
 # Account Routes #
 ##################
 
@@ -91,6 +96,6 @@ MTIMusicAndMeBundle_upload:
 # Musiques Routes #
 ###################
 
-# MTIMusicAndMeBundle_searchZik:
-#     pattern:  /searchzik
-#     defaults: { _controller: MTIMusicAndMeBundle:SearchZik:index }
+MTIMusicAndMeBundle_searchZik:
+    pattern:  /searchzik/
+    defaults: { _controller: MTIMusicAndMeBundle:SearchZik:index }

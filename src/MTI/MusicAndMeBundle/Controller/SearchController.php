@@ -17,28 +17,49 @@ class SearchController extends Controller
 {
   
   public function indexAction(Request $request)
-  {
-    $toSearch = $request->request->get('searchFlux');
-    
+  { 
     if (!Authentication::isAuthenticated($request))
       return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
     
     $session = $this->get('session');
-    
     $user = $this->getDoctrine()
     ->getRepository('MTIMusicAndMeBundle:User')
     ->find($session->get('user_id'));
     
     $userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
+
+    if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+    {
+	    $data = json_decode($this->getRequest()->getContent(), true);
+	    $toSearch = $data['searchFlux'];
+    }
+    else
+	    $toSearch = $request->request->get('searchFlux');
+
+    $listeStream = $this->getDoctrine()
+    ->getEntityManager()
+    ->getRepository('MTIMusicAndMeBundle:Stream')
+    ->searchStream($toSearch);
     
-    
-    return $this->render(
-      'MTIMusicAndMeBundle:Search:resultSearch.html.twig',
-      array(
-	'is_connected' => $user == null ? false : true,
-	'user_name' => $userName,
-	'toSearch' => $toSearch
-      )
-    );
+    if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+	return $this->render(
+		'MTIMusicAndMeBundle:Search:resultSearch.ajax.twig',
+		array(
+			'is_connected' => $user == null ? false : true,
+			'user_name' => $userName,
+			'toSearch' => $toSearch,
+			'listeStream' => $listeStream
+		)
+	);
+    else
+	return $this->render(
+		'MTIMusicAndMeBundle:Search:resultSearch.html.twig',
+		array(
+			'is_connected' => $user == null ? false : true,
+			'user_name' => $userName,
+			'toSearch' => $toSearch,
+			'listeStream' => $listeStream
+		)
+	);
   }
 }

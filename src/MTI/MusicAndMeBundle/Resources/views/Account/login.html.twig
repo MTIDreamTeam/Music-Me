@@ -2,43 +2,6 @@
 
 {% form_theme form 'MTIMusicAndMeBundle:Form:fields.html.twig' %}
 
-
-{% block title %}{{ parent() }} - Connexion{% endblock %}
-
 {% block content %}
-	<ul class="breadcrumb">
-		<li>
-			<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
-		</li>
-		<li class="active">Connexion</li>
-	</ul>
-	<section id="login">
-		<h2>Connexion</h2>
-		<div class="row">
-			<div class="span12">
-				<form class="form-horizontal" action="{{ path('MTIMusicAndMeBundle_login') }}" method="post" {{ form_enctype(form) }}>
-					<fieldset>
-						<legend>Entrez vos identifiants Music &amp; Me</legend>
-						<div class="control-group{% if form_errors(form.email) %} error{% endif %}">
-							{{ form_label(form.email, 'Adresse email', { 'attr': {'class': 'control-label'}}) }}
-							<div class="controls">
-								{{ form_widget(form.email, { 'attr': {'class': 'input-xlarge'}}) }}
-								{% if form_errors(form.email) %}{{ form_errors(form.email) }}{% endif %}
-							</div>
-						</div>
-						<div class="control-group{% if form_errors(form.password) %} error{% endif %}">
-							{{ form_label(form.password, 'Mot de passe', { 'attr': {'class': 'control-label'}}) }}
-							<div class="controls">
-								{{ form_widget(form.password, { 'attr': {'class': 'input-xlarge'}}) }}
-								{% if form_errors(form.password) %}{{ form_errors(form.password) }}{% endif %}
-							</div>
-						</div>
-						<div class="form-actions">
-							<button type="submit" class="btn btn-primary">Connexion à mon compte</button>
-						</div>
-					</fieldset>
-				</form>
-			</div>
-		</div>
-	</section>
+	{% include 'MTIMusicAndMeBundle:Account:login.ajax.twig' %}
 {% endblock %}

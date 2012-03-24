@@ -310,7 +310,7 @@ div.spinner div.bar12 {
 }
 
 #search_text{
-  font-size:14%;
+
 }
 
 #search-zik td, #search-zik th {
@@ -323,6 +323,10 @@ div.spinner div.bar12 {
 
 #search-zik td li, #search-zik td ul {
 	vertical-align: middle;
+}
+#search-zik img{
+	width:35px;
+	height:35px;
 }
 /* @end */
 

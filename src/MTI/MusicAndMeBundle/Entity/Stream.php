@@ -9,7 +9,7 @@ use MTI\MusicAndMeBundle\Entity\User;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="MTI\MusicAndMeBundle\Entity\StreamRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="stream")
  */

@@ -105,7 +105,13 @@ class HomeController extends Controller
 				$myStreamsCurrentSongs[] = null;
 			}
 			
-			return $this->render('MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig', array(
+			$templateName = null;
+			if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+				$templateName = 'MTIMusicAndMeBundle:Home:indexLoggedIn.ajax.twig';
+			else
+				$templateName = 'MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig';
+			
+			return $this->render($templateName, array(
 				'is_connected' => $user == null ? false : true,
 				'user_name' => $userName,
 				'my_streams' => $streams,
@@ -116,10 +122,16 @@ class HomeController extends Controller
 		}
 		else
 		{
-	        return $this->render('MTIMusicAndMeBundle:Home:index.html.twig', array(
+			$templateName = null;
+			if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+				$templateName = 'MTIMusicAndMeBundle:Home:indexLoggedIn.ajax.twig';
+			else
+				$templateName = 'MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig';
+			
+			return $this->render($templateName, array(
 				'is_connected' => $user == null ? false : true,
-	        	'user_name' => $userName,
-	        ));
+				'user_name' => $userName,
+			));
 		}
     }
 }
