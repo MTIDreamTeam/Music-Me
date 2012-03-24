@@ -1,29 +1,5 @@
 {% extends 'MTIMusicAndMeBundle:BaseHTML:base.html.twig' %}
 
 {% block content %}
-	<ul class="breadcrumb">
-		<li class="active">Music &amp; Me</li>
-	</ul>
-	<header class="jumbotron masthead">
-		<div class="inner">
-			<h1>Music & Me</h1>
-			<p>Vous êtes tous DJ de la soirée.</p>
-		</div>
-	</header>
-	<section id="fluidGridSystem">
-		<div class="row">
-			<div class="span4">
-				<h2>Écoutez</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-			</div>
-			<div class="span4">
-				<h2>Diffusez</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-			</div>
-			<div class="span4">
-				<h2>Partagez</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-			</div>
-		</div>
-	</section>
+	{% include 'MTIMusicAndMeBundle:Home:index.ajax.twig' %}
 {% endblock %}

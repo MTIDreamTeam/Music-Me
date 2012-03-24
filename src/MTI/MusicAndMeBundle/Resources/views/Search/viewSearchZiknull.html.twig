@@ -1,24 +1,5 @@
 {% extends 'MTIMusicAndMeBundle:BaseHTML:base.html.twig' %}
 
 {% block content %}
-<ul class="breadcrumb">
-<li>
-<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
-</li>
-<li>
-<a href="{{ path('MTIMusicAndMeBundle_searchZik') }}">Recherche de musique</a> <span class="divider">/</span>
-</li>
-<li class="active">{{ toSearch }}</li>
-</ul>
-<section id="form">
-		<div class="row">
-			<div class="span12">
-			<h3>Aucun résulat n'a été trouvé pour la recherche {{ toSearch }}</h3><br/>
-				<form class="form-horizontal" action="#" method="post">
-				  <input type="text" class="search-query span2" placeholder="Rechercher une musique" name="searchZik">
-				</form>
-			</div>
-		</div>
-	</section>
-
+	{% include 'MTIMusicAndMeBundle:Search:viewSearchZiknull.ajax.twig' with {'toSearch' : toSearch} %}
 {% endblock %}

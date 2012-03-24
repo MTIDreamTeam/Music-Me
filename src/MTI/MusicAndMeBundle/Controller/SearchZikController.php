@@ -38,39 +38,70 @@ class SearchZikController extends Controller
       ->getEntityManager()
       ->getRepository('MTIMusicAndMeBundle:Musique')
       ->searchMusic($toSearch);
-      if ($liste_zik == null)
-      {
-	return $this->render(
-	  'MTIMusicAndMeBundle:Search:viewSearchZiknull.html.twig',
-	  array(
-	    'is_connected' => $user == null ? false : true,
-	    'user_name' => $userName,
-	    'toSearch' => $toSearch
-	  )
-	  );
-      }
-      else {
-	return $this->render(
-	  'MTIMusicAndMeBundle:Search:resultSearchZik.html.twig',
-	  array(
-	    'is_connected' => $user == null ? false : true,
-	    'user_name' => $userName,
-	    'toSearch' => $toSearch,
-	    'listeZik' => $liste_zik
-	)
-	);
-      }
-      
+	if ($liste_zik == null)
+	{
+		if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+			return $this->render(
+				'MTIMusicAndMeBundle:Search:viewSearchZiknull.ajax.twig',
+				array(
+				'is_connected' => $user == null ? false : true,
+				'user_name' => $userName,
+				'toSearch' => $toSearch
+				)
+			);
+		else
+			return $this->render(
+				'MTIMusicAndMeBundle:Search:viewSearchZiknull.html.twig',
+				array(
+				'is_connected' => $user == null ? false : true,
+				'user_name' => $userName,
+				'toSearch' => $toSearch
+				)
+			);
+	}
+	else {
+		if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+			return $this->render(
+				'MTIMusicAndMeBundle:Search:resultSearchZik.ajax.twig',
+				array(
+				'is_connected' => $user == null ? false : true,
+				'user_name' => $userName,
+				'toSearch' => $toSearch,
+				'listeZik' => $liste_zik
+				)
+			);
+		else
+			return $this->render(
+				'MTIMusicAndMeBundle:Search:resultSearchZik.html.twig',
+				array(
+				'is_connected' => $user == null ? false : true,
+				'user_name' => $userName,
+				'toSearch' => $toSearch,
+				'listeZik' => $liste_zik
+				)
+			);
+	}
     }
     
     else {
-    return $this->render(
-      'MTIMusicAndMeBundle:Search:viewSearchZik.html.twig',
-      array(
-	'is_connected' => $user == null ? false : true,
-	'user_name' => $userName,
-	)
-	);
+	    if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+		return $this->render(
+			'MTIMusicAndMeBundle:Search:viewSearchZik.ajax.twig',
+			array(
+			'is_connected' => $user == null ? false : true,
+			'user_name' => $userName,
+			)
+		);
+	    else
+		return $this->render(
+			'MTIMusicAndMeBundle:Search:viewSearchZik.html.twig',
+			array(
+			'is_connected' => $user == null ? false : true,
+			'user_name' => $userName,
+			)
+		);
+	    
+	    
     }
   }
 }

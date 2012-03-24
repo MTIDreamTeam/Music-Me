@@ -28,19 +28,31 @@ class HomeController extends Controller
 			$streams = $this->getDoctrine()
 							->getRepository('MTIMusicAndMeBundle:Stream')
 							->findBy(array('owner' => $user->getId()));
-			
-	        return $this->render('MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig', array(
-				'is_connected' => $user == null ? false : true,
-	        	'user_name' => $userName,
-				'my_streams' => $streams,
-	        ));
+		if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+			return $this->render('MTIMusicAndMeBundle:Home:indexLoggedIn.ajax.twig', array(
+					'is_connected' => $user == null ? false : true,
+					'user_name' => $userName,
+					'my_streams' => $streams,
+			));
+		else
+			return $this->render('MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig', array(
+					'is_connected' => $user == null ? false : true,
+					'user_name' => $userName,
+					'my_streams' => $streams,
+				));
 		}
 		else
 		{
-	        return $this->render('MTIMusicAndMeBundle:Home:index.html.twig', array(
-				'is_connected' => $user == null ? false : true,
-	        	'user_name' => $userName,
-	        ));
+			if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+				return $this->render('MTIMusicAndMeBundle:Home:index.ajax.twig', array(
+					'is_connected' => $user == null ? false : true,
+					'user_name' => $userName,
+				));
+			else 
+				return $this->render('MTIMusicAndMeBundle:Home:index.html.twig', array(
+					'is_connected' => $user == null ? false : true,
+					'user_name' => $userName,
+				));
 		}
     }
 }

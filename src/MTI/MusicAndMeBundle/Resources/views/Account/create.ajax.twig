@@ -1,0 +1,51 @@
+<span id="reload-header" data-reload-value="false" style="{display:none}"></span>
+<ul class="breadcrumb">
+	<li>
+		<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
+	</li>
+	<li class="active">Créer un compte</li>
+</ul>
+
+<section id="create">
+	<h2>Créer un compte</h2>
+	<div class="row">
+		<div class="span12">
+			<form class="form-horizontal" action="{{ path('MTIMusicAndMeBundle_create') }}" method="post" {{ form_enctype(form) }}>
+				<fieldset>
+					<legend>Entrez vos informations personnelles</legend>
+					<div class="control-group{% if form_errors(form.email) %} error{% endif %}">
+						{{ form_label(form.email, 'Adresse email', { 'attr': {'class': 'control-label'}}) }}
+						<div class="controls">
+							{{ form_widget(form.email, { 'attr': {'class': 'input-xlarge'}}) }}
+							{% if form_errors(form.email) %}{{ form_errors(form.email) }}{% endif %}
+						</div>
+					</div>
+					<div class="control-group{% if form_errors(form.password) %} error{% endif %}">
+						{{ form_label(form.password, 'Mot de passe', { 'attr': {'class': 'control-label'}}) }}
+						<div class="controls">
+							{{ form_widget(form.password, { 'attr': {'class': 'input-xlarge'}}) }}
+							{% if form_errors(form.password) %}{{ form_errors(form.password) }}{% endif %}
+						</div>
+					</div>
+					<div class="control-group{% if form_errors(form.firstname) %} error{% endif %}">
+						{{ form_label(form.firstname, 'Prénom', { 'attr': {'class': 'control-label'}}) }}
+						<div class="controls">
+							{{ form_widget(form.firstname, { 'attr': {'class': 'input-xlarge'}}) }}
+							{% if form_errors(form.firstname) %}{{ form_errors(form.firstname) }}{% endif %}
+						</div>
+					</div>
+					<div class="control-group{% if form_errors(form.lastname) %} error{% endif %}">
+						{{ form_label(form.lastname, 'Nom', { 'attr': {'class': 'control-label'}}) }}
+						<div class="controls">
+							{{ form_widget(form.lastname, { 'attr': {'class': 'input-xlarge'}}) }}
+							{% if form_errors(form.lastname) %}{{ form_errors(form.lastname) }}{% endif %}
+						</div>
+					</div>
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary">Créer mon compte</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</section>

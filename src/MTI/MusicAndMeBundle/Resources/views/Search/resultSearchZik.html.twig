@@ -1,43 +1,5 @@
 {% extends 'MTIMusicAndMeBundle:BaseHTML:base.html.twig' %}
 
 {% block content %}
-<ul class="breadcrumb">
-  <li>
-    <a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
-  </li>
-  <li>
-    <a href="{{ path('MTIMusicAndMeBundle_searchZik') }}">Recherche de musique</a> <span class="divider">/</span>
-  </li>
-  <li class="active">{{ toSearch }}</li>
-</ul>
-	<section id="search-zik">
-
-		<div>
-			<h3>&ensp;</h3>
-		</div>
-		<table class="table">
-			<thead>
-				<tr>
-					<th></th>
-					<th>Titre</th>
-					<th>Album</th>
-					<th>Artiste</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-			{% for zik in listeZik %}
-				<tr>
-					<td>
-					<img class="thumbnail" src="{{ zik.album.getCoverPath() }}" alt="">
-					</td>
-					<td>{{ zik.title }}</td>
-					<td>{{ zik.album.title }}</td>
-					<td>{{ zik.album.artiste.name }}</td>
-					<td><div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Ajouter !"><i class="icon-plus icon-black"></i></td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-	</section>
+	{% include 'MTIMusicAndMeBundle:Search:resultSearchZik.ajax.twig' with {'toSearch' : toSearch, 'listeZik' : listeZik} %}
 {% endblock %}

@@ -1,15 +1,5 @@
 {% extends 'MTIMusicAndMeBundle:BaseHTML:base.html.twig' %}
 
-{% block title %}{{ parent() }} - Mon compte ({{ user_name }}){% endblock %}
-
 {% block content %}
-	<ul class="breadcrumb">
-		<li>
-			<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
-		</li>
-		<li class="active">Mon Compte</li>
-	</ul>
-	<section id="login">
-		Hello {{ user_name }} !
-	</section>
+	{% include 'MTIMusicAndMeBundle:Account:index.ajax.twig' with {'user_name' : user_name}  %}
 {% endblock %}

@@ -31,14 +31,23 @@ class SearchController extends Controller
     
     $userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
     
-    
-    return $this->render(
-      'MTIMusicAndMeBundle:Search:resultSearch.html.twig',
-      array(
-	'is_connected' => $user == null ? false : true,
-	'user_name' => $userName,
-	'toSearch' => $toSearch
-      )
-    );
+    if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+	return $this->render(
+		'MTIMusicAndMeBundle:Search:resultSearch.ajax.twig',
+		array(
+			'is_connected' => $user == null ? false : true,
+			'user_name' => $userName,
+			'toSearch' => $toSearch
+		)
+	);
+    else
+	return $this->render(
+		'MTIMusicAndMeBundle:Search:resultSearch.html.twig',
+		array(
+			'is_connected' => $user == null ? false : true,
+			'user_name' => $userName,
+			'toSearch' => $toSearch
+		)
+	);
   }
 }
