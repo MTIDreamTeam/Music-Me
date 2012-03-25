@@ -20,9 +20,9 @@ jQuery(document).ready(function($) {
 		alert.find('h4').text(title);
 		alert.find('span').text(message);
 		alert.fadeIn();
-		// setTimeout(function() {
-		// 	alert.alert('close');
-		// }, 5000);
+		setTimeout(function() {
+			alert.fadeOut();
+		}, 4000);
 	}
 
 	function showError(title, message)
