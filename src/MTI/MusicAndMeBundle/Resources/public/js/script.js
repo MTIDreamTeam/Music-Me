@@ -6,12 +6,12 @@ var validated = '<div class="btn btn-success disabled"><i class="icon-ok icon-wh
 var error = '<div class="btn btn-danger disabled"><i class="icon-remove icon-white"></i></div>';
 
 jQuery(document).ready(function($) {
-
+	
 	var errorAlert = $('#error-alert');
 	var infoAlert = $('#info-alert');
 	var warningAlert = $('#warning-alert');
 	var successAlert = $('#success-alert');
-
+	
 	var closeAlertButton = $('div.alert > a.close').click(function() {
 		$(this).parent().fadeOut();
 	});
@@ -197,7 +197,6 @@ jQuery(document).ready(function($) {
 	})
 
 	voteButtons.click(function() {
-
 		var button = $(this);
 		var cell = button.parent();
 		button.tooltip('hide');
@@ -228,7 +227,7 @@ jQuery(document).ready(function($) {
 			},
 			error: function(data) {
 				console.log('error');
-				handleVoteError(data, cell, button);
+				// handleVoteError(data, cell, button);
 			}
 		});
 	});
