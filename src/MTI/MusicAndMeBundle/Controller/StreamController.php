@@ -185,14 +185,25 @@ class StreamController extends Controller
 	
 	public function voteAction(Request $request)
 	{
-		// return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_homepage'));
-		$data = json_decode($request()->getContent(), true);
+		$session = $this->get('session');
+		$data = json_decode($this->getRequest()->getContent(), true);
 		
 		$music = $this->getDoctrine()
 					  ->getRepository('MTIMusicAndMeBundle:Musique')
 					  ->findOneById($data['music']);
 		if ($music == null)
-			return new Response(json_encode(array('error' => 'La musique demandée pour le vote n\'existe pas')));
+		{
+			return new Response(
+				json_encode(
+					array(
+						'error' => array(
+							'title' => 'Le vote n\'a pas été pris en compte',
+							'message' => 'La musique demandée pour le vote n\'existe pas',
+						)
+					)
+				)
+			);
+		}
 		
 		$now = new \DateTime();
 		$endMusic = new \DateTime();
@@ -214,6 +225,6 @@ class StreamController extends Controller
 			return new Response(json_encode(array($records[0]->getPlayed())));
 		}
 		
-		return new Response(json_encode(array('name' => 'plop')));
+		return new Response(json_encode(array('name' => 'plop', 'error' => null)));
 	}
 }
