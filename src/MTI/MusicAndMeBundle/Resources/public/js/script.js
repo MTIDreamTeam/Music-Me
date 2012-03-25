@@ -17,12 +17,14 @@ jQuery(document).ready(function($) {
 
 	function showAlert(title, message, id, alert)
 	{
+		console.log('plop');
+		alert.fadeOut();
 		alert.find('h4').text(title);
 		alert.find('span').text(message);
 		alert.fadeIn();
 		setTimeout(function() {
 			alert.fadeOut();
-		}, 4000);
+		}, 3000);
 	}
 
 	function showError(title, message)
@@ -49,7 +51,7 @@ jQuery(document).ready(function($) {
 	{
 		cell.find('.spinner').parent().remove();
 		cell.append(error);
-		showError(data['error']['title'], data['error']['message']);
+		showError(data['alert']['title'], data['alert']['message']);
 		setTimeout(function() {
 			$('td >	 div.btn-danger').remove();
 			button.fadeIn();
@@ -60,6 +62,7 @@ jQuery(document).ready(function($) {
 	{
 		cell.find('.spinner').parent().remove();
 		cell.append(validated);
+		showSuccess(data['alert']['title'], data['alert']['message']);
 	}
 
 	// pre fetched UI elements
@@ -89,7 +92,7 @@ jQuery(document).ready(function($) {
 			dataType: 'json',
 			data: $.toJSON(voteContent),
 			success: function(data) {
-				if (data['error'] == null)
+				if (data['alert'] && data['alert']['type'] == 'success')
 					handleVoteSuccess(data, cell);
 				else
 					handleVoteError(data, cell, button);
