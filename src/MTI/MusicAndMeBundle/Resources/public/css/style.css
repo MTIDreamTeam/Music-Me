@@ -332,3 +332,16 @@ div.spinner div.bar12 {
   border:none;
 }
 /* @end */
+
+/* @group Alerts */
+
+.alert {
+	position: fixed;
+	top: 50px;
+	width: 1119px;
+	z-index: 1000;
+}
+
+
+
+/* @end */

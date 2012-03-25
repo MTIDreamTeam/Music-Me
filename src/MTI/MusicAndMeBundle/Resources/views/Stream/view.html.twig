@@ -39,82 +39,27 @@
 						<div class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Écouter !"><i class="icon-play icon-white"></i></div>
 					</td>
 				</tr>
+				{% if records_count %}
+				{% for i in range(0, records_count - 1) %}
 				<tr>
-					<td class="music-id" style="display: none;">86786234</td>
+					<td class="music-id" style="display: none;">{{ next_records[i].music.id }}</td>
 					<td>
 						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
 					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge"><span class="vote-count">23</span> votes</span></td>
+					<td>{{ next_records[i].music.title }} — {{ next_records[i].music.album.artiste.name }} — {{ next_records[i].music.album.title }}</td>
+					<td><span class="badge"><span class="vote-count">{{ next_records_votes[i] }}</span> vote{% if next_records_votes[i] > 1 %}s{% endif %}</span></td>
+					{% if next_records_has_voted[i] %}
+					<td>
+						<div class="btn btn-success disabled"><i class="icon-ok icon-white"></i></div>
+					</td>
+					{% else %}
 					<td>
 						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></div>
 					</td>
+					{% endif %}
 				</tr>
-				<tr>
-					<td class="music-id" style="display: none;">3</td>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge"><span class="vote-count">23</span> votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></div>
-					</td>
-				</tr>
-				<tr>
-					<td class="music-id" style="display: none;">3</td>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge"><span class="vote-count">23</span> votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></div>
-					</td>
-				</tr>
-				<tr>
-					<td class="music-id" style="display: none;">3</td>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge"><span class="vote-count">23</span> votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge"><span class="vote-count">12</span> votes</span></td>
-					<td>
-						<a class="btn btn-success disabled" href="#"><i class="icon-ok icon-white"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td class="music-id" style="display: none;">3</td>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge"><span class="vote-count">23</span> votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></div>
-					</td>
-				</tr>
-				<tr>
-					<td class="music-id" style="display: none;">3</td>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge"><span class="vote-count">23</span> votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></div>
-					</td>
-				</tr>
+				{% endfor %}
+				{% endif %}
 			</tbody>
 		</table>
 	</section>

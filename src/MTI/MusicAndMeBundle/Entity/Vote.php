@@ -42,12 +42,6 @@ class Vote
     protected $streamRecord;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Musique", inversedBy="votes")
-	 * @ORM\JoinColumn(name="music_id", referencedColumnName="id")
-	 */
-    protected $music;
-	
-	/**
 	 * @ORM\PrePersist
 	 */
 	public function onPrePersist()
