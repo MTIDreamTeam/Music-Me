@@ -25,3 +25,38 @@ jQuery(document).ready(function($) {
 	});
 	
 });
+
+function callAjax(data, url)
+{	
+	$.ajax({
+		type: "POST",
+		url: url,
+		data: data,
+		contentType: "application/json",
+		success: function(data){
+			if(data.substr(0, 5) == "redir")
+				callAjax("", data.substr(6, data.length));
+			else
+			{
+				$('#block-content').html(data);
+				if ($('#reload-header').attr('data-reload-value') == "true")
+				reloadHeader();
+			}
+		}
+	});
+	return false;
+}
+
+function reloadHeader()
+{
+	$.ajax({
+		type: "POST",
+		url: "/home/header/",
+		data: "",
+		contentType: "application/json",
+		success: function(data){
+			$('#block-header').html(data);
+		}
+	});
+	return false;
+}

@@ -27,7 +27,7 @@ class AccountController extends Controller
 		
 		$userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
 		return $this->render(
-		'MTIMusicAndMeBundle:Account:header.html.twig',
+		'MTIMusicAndMeBundle:Header:header_right.html.twig',
 				array(
 					'is_connected' => $user == null ? false : true,
 					'user_name' => $userName,

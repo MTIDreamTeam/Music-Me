@@ -21,7 +21,6 @@ class UploadController extends Controller
       if (!Authentication::isAuthenticated($request))
 	return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
 
-      
       $session = $this->get('session');
       
       $user = $this->getDoctrine()
@@ -35,7 +34,7 @@ class UploadController extends Controller
       $formBuilder = $this->createFormBuilder($zik);
       $formBuilder->add('file');
       $form = $formBuilder->getForm();
-      if ($this->getRequest()->getMethod() === 'POST') {
+      if ($this->getRequest()->getMethod() === 'POST' && $zik->file != null) {
         $form->bindRequest($this->getRequest());
 	    if ($zik->file->getMimeType() == "application/zip")
 	    {

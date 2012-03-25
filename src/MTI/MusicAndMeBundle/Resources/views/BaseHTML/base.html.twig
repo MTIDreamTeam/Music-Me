@@ -13,7 +13,7 @@
 		{% block header %}
 			{% include 'MTIMusicAndMeBundle:Header:header.html.twig' with {'user_name': user_name, 'is_connected': is_connected} %}
 		{% endblock %}
-		<div class="container">
+		<div class="container" id="block-content">
 		{% block content %}{% endblock %}
 		</div>
 		<!-- {% block footer %}

@@ -2,14 +2,11 @@
 	<div class="navbar-inner">
 		<div class="container">
 			<ul class="nav pull-left">
-				<a class="brand" href="{{ path('MTIMusicAndMeBundle_homepage') }}">
+				<a class="brand" href="{{ path('MTIMusicAndMeBundle_homepage') }}" onclick="callAjax('', '/'); return false;">
 					<img src="{{ asset('images/logo3.png') }}" />
 				</a>
 			</ul>
-			<ul class="nav pull-right">
-			<form class="navbar-search pull-left" action="{{ path('MTIMusicAndMeBundle_search') }}" method="POST">
-					<input type="text" class="search-query span2" placeholder="Rechercher un flux" name="searchFlux">
-				</form>
+			<ul class="nav pull-right" id="block-header">
 				{% include 'MTIMusicAndMeBundle:Header:header_right.html.twig' with {'user_name': user_name, 'is_connected': is_connected} %}
 			</ul>
 		</div>

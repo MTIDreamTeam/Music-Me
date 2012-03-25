@@ -29,11 +29,13 @@ class HomeController extends Controller
 							->getRepository('MTIMusicAndMeBundle:Stream')
 							->findBy(array('owner' => $user->getId()));
 		if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+		{
 			return $this->render('MTIMusicAndMeBundle:Home:indexLoggedIn.ajax.twig', array(
 					'is_connected' => $user == null ? false : true,
 					'user_name' => $userName,
 					'my_streams' => $streams,
 			));
+		}
 		else
 			return $this->render('MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig', array(
 					'is_connected' => $user == null ? false : true,
