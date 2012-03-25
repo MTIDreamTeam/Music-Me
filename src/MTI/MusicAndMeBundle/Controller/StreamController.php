@@ -172,7 +172,8 @@ class StreamController extends Controller
 		$nextMusicAlbum = array();
 		$nextMusicCover = array();
 		
-		for ($i = 0; $i < count($nextRecords); $i++)
+		
+		for ($i = 0; $i < $recordsCount; $i++)
 		{
 			$nextRecordsHasVoted[$i] = false;
 			
@@ -196,6 +197,35 @@ class StreamController extends Controller
 			}
 		}
 		
+		$currentRecordQuery = $this->getDoctrine()
+								   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+								   ->createQueryBuilder('record')
+								   ->where("record.played < '" . $now->format('Y-m-d H:i:s') . "'")
+								   ->andWhere("record.stream = " . $streamId)
+								   ->orderBy('record.played', 'DESC')
+								   ->getQuery();
+		$currentRecordResult = $currentRecordQuery->getResult();
+		// var_dump(count($currentRecordResult));die();
+		
+		$currentRecord = null;
+		$currentRecordId = null;
+		$currentRecordTitle = null;
+		$currentRecordArtist = null;
+		$currentRecordAlbum = null;
+		
+		if (count($currentRecordResult))
+		{
+			$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
+			if ($lastEndTime > $now->getTimestamp())
+			{
+				$currentRecord = $currentRecordResult[0];
+				$currentRecordId = $currentRecord->getId();
+				$currentRecordTitle = $currentRecord->getMusic()->getTitle();
+				$currentRecordArtist = $currentRecord->getMusic()->getAlbum()->getArtiste()->getName();
+				$currentRecordAlbum = $currentRecord->getMusic()->getAlbum()->getTitle();
+			}
+		}
+		
 		return $this->render(
 			'MTIMusicAndMeBundle:Stream:view.html.twig',
 			array(
@@ -203,6 +233,11 @@ class StreamController extends Controller
 				'user_name' => $userName,
 				'stream' => $stream,
 				'records_count' => $recordsCount,
+				'current_record' => $currentRecord,
+				'current_record_id' => $currentRecordId,
+				'current_record_title' => $currentRecordTitle,
+				'current_record_artist' => $currentRecordArtist,
+				'current_record_album' => $currentRecordAlbum,
 				'next_records' => $nextRecords,
 				'next_records_votes' => $nextRecordsVotes,
 				'next_records_has_voted' => $nextRecordsHasVoted,

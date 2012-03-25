@@ -19,6 +19,7 @@
 		</div>
 		<div id="stream-id" style="display: none;">{{ stream.id }}</div>
 		<table class="table">
+			{% if current_record %}
 			<thead>
 				<tr>
 					<th></th>
@@ -29,11 +30,11 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td class="music-id" style="display: none;">3</td>
+					<td class="music-id" style="display: none;">{{ current_record.music.id }}</td>
 					<td>
 						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
 					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
+					<td>{{ current_record.music.title }} — {{ current_record.music.album.artiste.name }} — {{ current_record.music.album.title }}</td>
 					<td><span class="label label-important">En ce moment</span></td>
 					<td>
 						<div class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Écouter !"><i class="icon-play icon-white"></i></div>
@@ -61,6 +62,7 @@
 				{% endfor %}
 				{% endif %}
 			</tbody>
+			{% endif %}
 		</table>
 	</section>
 {% endblock %}
