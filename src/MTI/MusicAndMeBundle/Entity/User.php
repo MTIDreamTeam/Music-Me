@@ -51,11 +51,6 @@ class User
 	 */
 	protected $votes;
 	
-	/**
-	 * @ORM\OneToMany(targetEntity="Music", mappedBy="user")
-	 */
-	protected $musics;
-	
     /**
      * @ORM\Column(type="datetime")
      */
