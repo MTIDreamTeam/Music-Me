@@ -18,13 +18,19 @@ class SearchController extends Controller
   
   public function indexAction(Request $request)
   {
-    $toSearch = $request->request->get('searchFlux');
+	  if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+	  {
+		$data = json_decode($this->getRequest()->getContent(), true);
+		$toSearch = $data['searchFlux'];;
+	  }
+	  else
+		$toSearch = $request->request->get('searchFlux');
+	  
     
     if (!Authentication::isAuthenticated($request))
       return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
     
     $session = $this->get('session');
-    
     $user = $this->getDoctrine()
     ->getRepository('MTIMusicAndMeBundle:User')
     ->find($session->get('user_id'));

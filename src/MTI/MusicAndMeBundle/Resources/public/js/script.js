@@ -27,11 +27,12 @@ jQuery(document).ready(function($) {
 });
 
 function callAjax(data, url)
-{	
+{
 	$.ajax({
 		type: "POST",
 		url: url,
 		data: data,
+		datatype: "json",
 		contentType: "application/json",
 		success: function(data){
 			if(data.substr(0, 5) == "redir")
@@ -46,6 +47,12 @@ function callAjax(data, url)
 	});
 	return false;
 }
+
+$("#search-flux-form").submit(function(){
+	var DATA = '{"searchFlux":"' + $("#searchFluxIn").val() + '"}';
+	$("#searchFluxIn").val("");
+	return callAjax(DATA, "/search/");
+});
 
 function reloadHeader()
 {
