@@ -34,7 +34,7 @@ class UploadController extends Controller
       $formBuilder = $this->createFormBuilder($zik);
       $formBuilder->add('file');
       $form = $formBuilder->getForm();
-      if ($this->getRequest()->getMethod() === 'POST' && $zik->file != null) {
+      if ($this->getRequest()->getMethod() === 'POST') {
         $form->bindRequest($this->getRequest());
 	    if ($zik->file->getMimeType() == "application/zip")
 	    {

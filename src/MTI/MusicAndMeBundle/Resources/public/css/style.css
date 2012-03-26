@@ -348,4 +348,8 @@ div.spinner div.bar12 {
 #search-zik td li, #search-zik td ul {
 	vertical-align: middle;
 }
+#search-zik img{
+	width:35px;
+	height:35px;
+}
 /* @end */
