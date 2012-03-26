@@ -6,7 +6,7 @@
     <a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
   </li>
   <li>
-    <a href="{{ path('MTIMusicAndMeBundle_searchZik') }}">Recherche de musique</a> <span class="divider">/</span>
+    <a href="{{ path('MTIMusicAndMeBundle_searchZik', {'stream_id': stream_id }) }}">Recherche de musique</a> <span class="divider">/</span>
   </li>
   <li class="active">{{ toSearch }}</li>
 </ul>
@@ -35,7 +35,7 @@
 					<td>{{ zik.title }}</td>
 					<td>{{ zik.album.title }}</td>
 					<td>{{ zik.album.artiste.name }}</td>
-					<td><div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Ajouter et voter !"><i class="icon-plus icon-black"></i></td>
+					<td><div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter pour cette musique"><i class="icon-plus icon-black"></i></td>
 				</tr>
 			{% endfor %}
 			</tbody>

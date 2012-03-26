@@ -69,8 +69,7 @@
 				{% endif %}
 			</tbody>
 		</table>
-		{% else %}
-			<a href="{{ path('MTIMusicAndMeBundle_searchZik', { 'stream_id' : stream.id }) }}" class="btn btn-primary">Ajouter une musique au flux</a>
 		{% endif %}
+		<a href="{{ path('MTIMusicAndMeBundle_searchZik', { 'stream_id' : stream.id }) }}" class="btn">Ajouter une musique au flux</a>
 	</section>
 {% endblock %}

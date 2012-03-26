@@ -3,7 +3,7 @@
 {% block content %}
 <ul class="breadcrumb">
 <li>
-<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
+<a href="{{ path('MTIMusicAndMeBundle_homepage', {'stream_id': stream_id }) }}">Music &amp; Me</a> <span class="divider">/</span>
 </li>
 <li>
 <a href="{{ path('MTIMusicAndMeBundle_searchZik') }}">Recherche de musique</a> <span class="divider">/</span>
