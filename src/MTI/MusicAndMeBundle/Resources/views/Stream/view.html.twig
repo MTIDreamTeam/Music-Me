@@ -17,6 +17,8 @@
 		<div>
 			<h3>&ensp;</h3>
 		</div>
+		<div id="stream-id" style="display: none;">{{ stream.id }}</div>
+		{% if current_record %}
 		<table class="table">
 			<thead>
 				<tr>
@@ -28,126 +30,41 @@
 			</thead>
 			<tbody>
 				<tr>
+					<td class="music-id" style="display: none;">{{ current_record.music.id }}</td>
 					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
+						<img class="thumbnail" src="{{ current_record.music.album.getCoverPath() }}" alt="">
 					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
+					<td>{{ current_record.music.title }} — {{ current_record.music.getAlbum().getArtiste().getName() }} — {{ current_record.music.album.title }}</td>
 					<td><span class="label label-important">En ce moment</span></td>
 					<td>
 						<div class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Écouter !"><i class="icon-play icon-white"></i></div>
 					</td>
 				</tr>
+				{% if records_count %}
+				{% for i in range(0, records_count - 1) %}
 				<tr>
+					<td class="music-id" style="display: none;">{{ next_records[i].music.id }}</td>
 					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
+						<img class="thumbnail" src="{{ next_records[i].music.album.getCoverPath() }}" alt="">
 					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">23 votes</span></td>
+					<td>{{ next_records[i].music.title }} — {{ next_records[i].music.album.artiste.name }} — {{ next_records[i].music.album.title }}</td>
+					<td><span class="badge"><span class="vote-count">{{ next_records_votes[i] }}</span> vote{% if next_records_votes[i] > 1 %}s{% endif %}</span></td>
+					{% if next_records_has_voted[i] %}
+					<td>
+						<div class="btn btn-success disabled"><i class="icon-ok icon-white"></i></div>
+					</td>
+					{% else %}
 					<td>
 						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></div>
 					</td>
+					{% endif %}
 				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">15 votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">12 votes</span></td>
-					<td>
-						<a class="btn btn-success disabled" href="#"><i class="icon-ok icon-white"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">11 votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">11 votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">11 votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">6 votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">5 votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">5 votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">3 votes</span></td>
-					<td>
-						<a class="btn tip" href="# data-placement="bottom" rel="popover" data-original-title="Voter !""><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<img class="thumbnail" src="/images/cover_thumb.jpg" alt="">
-					</td>
-					<td>Lorem Ipsum — Lorem Ipsum — Lorem Ipsum</td>
-					<td><span class="badge">2 votes</span></td>
-					<td>
-						<div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Voter !"><i class="icon-arrow-up icon-black"></i></a>
-					</td>
-				</tr>
+				{% endfor %}
+				{% endif %}
 			</tbody>
 		</table>
+		{% else %}
+			<a href="{{ path('MTIMusicAndMeBundle_searchZik', { 'stream_id' : stream.id }) }}" class="btn btn-primary">Ajouter une musique au flux</a>
+		{% endif %}
 	</section>
 {% endblock %}

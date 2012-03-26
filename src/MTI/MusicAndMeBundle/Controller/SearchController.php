@@ -17,16 +17,7 @@ class SearchController extends Controller
 {
   
   public function indexAction(Request $request)
-  {
-	  if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-	  {
-		$data = json_decode($this->getRequest()->getContent(), true);
-		$toSearch = $data['searchFlux'];;
-	  }
-	  else
-		$toSearch = $request->request->get('searchFlux');
-	  
-    
+  { 
     if (!Authentication::isAuthenticated($request))
       return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
     
@@ -36,6 +27,19 @@ class SearchController extends Controller
     ->find($session->get('user_id'));
     
     $userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
+
+    if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+    {
+	    $data = json_decode($this->getRequest()->getContent(), true);
+	    $toSearch = $data['searchFlux'];
+    }
+    else
+	    $toSearch = $request->request->get('searchFlux');
+
+    $listeStream = $this->getDoctrine()
+    ->getEntityManager()
+    ->getRepository('MTIMusicAndMeBundle:Stream')
+    ->searchStream($toSearch);
     
     if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
 	return $this->render(
@@ -43,7 +47,8 @@ class SearchController extends Controller
 		array(
 			'is_connected' => $user == null ? false : true,
 			'user_name' => $userName,
-			'toSearch' => $toSearch
+			'toSearch' => $toSearch,
+			'listeStream' => $listeStream
 		)
 	);
     else
@@ -52,7 +57,8 @@ class SearchController extends Controller
 		array(
 			'is_connected' => $user == null ? false : true,
 			'user_name' => $userName,
-			'toSearch' => $toSearch
+			'toSearch' => $toSearch,
+			'listeStream' => $listeStream
 		)
 	);
   }

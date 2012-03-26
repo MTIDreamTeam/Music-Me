@@ -13,14 +13,37 @@
 		{% block header %}
 			{% include 'MTIMusicAndMeBundle:Header:header.html.twig' with {'user_name': user_name, 'is_connected': is_connected} %}
 		{% endblock %}
+		<div class="container">
+			<div id="error-alert" class="alert alert-error alert-block" style="display: none;">
+				<a class="close">×</a>
+				<h4 class="alert-heading"></h4>
+				<span></span>
+			</div>
+			<div id="success-alert" class="alert alert-success alert-block" style="display: none;">
+				<a class="close" data-dismiss="alert">×</a>
+				<h4 class="alert-heading"></h4>
+				<span></span>
+			</div>
+			<div id="info-alert" class="alert alert-info alert-block" style="display: none;">
+				<a class="close" data-dismiss="alert">×</a>
+				<h4 class="alert-heading"></h4>
+				<span></span>
+			</div>
+			<div id="warning-alert" class="alert alert-block" style="display: none;">
+				<a class="close" data-dismiss="alert">×</a>
+				<h4 class="alert-heading"></h4>
+				<span></span>
+			</div>
 		<div class="container" id="block-content">
 		{% block content %}{% endblock %}
+		</div>
 		</div>
 		<!-- {% block footer %}
 			{% include 'MTIMusicAndMeBundle:UI:player.html.twig' %}
 		{% endblock %} -->
 		{% javascripts
 		    '@MTIMusicAndMeBundle/Resources/public/js/jquery-1.7.1.min.js'
+		    '@MTIMusicAndMeBundle/Resources/public/js/jquery.json-2.3.min.js'
 			'@MTIMusicAndMeBundle/Resources/public/js/bootstrap.js'
 			'@MTIMusicAndMeBundle/Resources/public/js/script.js'
 		%}

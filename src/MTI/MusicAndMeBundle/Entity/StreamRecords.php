@@ -8,11 +8,11 @@ use Doctrine\ORM\Events;
 use MTI\MusicAndMeBundle\Entity\User;
 
 /**
- * @ORM\Entity(repositoryClass="MTI\MusicAndMeBundle\Entity\StreamRepository")
+ * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="stream")
+ * @ORM\Table(name="stream_records")
  */
-class Stream
+class StreamRecords
 {
     /**
      * @ORM\Id
@@ -20,30 +20,26 @@ class Stream
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    protected $name;
 	
     /**
      * @ORM\Column(type="datetime")
      */
-    protected $created;
+    protected $played;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="User", inversedBy="streams")
-	 * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
+	 * @ORM\ManyToOne(targetEntity="Stream", inversedBy="streamRecords")
+	 * @ORM\JoinColumn(name="stream_id", referencedColumnName="id")
 	 */
-    protected $owner;
+    protected $stream;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="StreamRecords", mappedBy="stream")
+	 * @ORM\ManyToOne(targetEntity="Musique", inversedBy="streamRecords")
+	 * @ORM\JoinColumn(name="music_id", referencedColumnName="id")
 	 */
-	protected $streamRecords;
-	
+    protected $music;
+
 	/**
-	 * @ORM\OneToMany(targetEntity="Vote", mappedBy="stream")
+	 * @ORM\OneToMany(targetEntity="Vote", mappedBy="streamRecords")
 	 */
 	protected $votes;
 
@@ -52,7 +48,13 @@ class Stream
 	 */
 	public function onPrePersist()
 	{
-	    $this->created = new \DateTime();
+	    $this->played = new \DateTime();
+	}
+
+	public function isPlaying()
+	{
+		$now = new \DateTime();
+		return ($this->getPlayed()->getTimestamp() + $this->getMusic()->getDuree() > $now->getTimestamp()) ? true : false;
 	}
 
     /**
@@ -124,29 +126,69 @@ class Stream
     {
         return $this->created;
     }
-    public function __construct()
-    {
-        $this->streamRecords = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
+
     /**
-     * Add streamRecords
+     * Set played
      *
-     * @param MTI\MusicAndMeBundle\Entity\StreamRecords $streamRecords
+     * @param datetime $played
      */
-    public function addStreamRecords(\MTI\MusicAndMeBundle\Entity\StreamRecords $streamRecords)
+    public function setPlayed($played)
     {
-        $this->streamRecords[] = $streamRecords;
+        $this->played = $played;
     }
 
     /**
-     * Get streamRecords
+     * Get played
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return datetime 
      */
-    public function getStreamRecords()
+    public function getPlayed()
     {
-        return $this->streamRecords;
+        return $this->played;
+    }
+
+    /**
+     * Set stream
+     *
+     * @param MTI\MusicAndMeBundle\Entity\Stream $stream
+     */
+    public function setStream(\MTI\MusicAndMeBundle\Entity\Stream $stream)
+    {
+        $this->stream = $stream;
+    }
+
+    /**
+     * Get stream
+     *
+     * @return MTI\MusicAndMeBundle\Entity\Stream 
+     */
+    public function getStream()
+    {
+        return $this->stream;
+    }
+
+    /**
+     * Set music
+     *
+     * @param MTI\MusicAndMeBundle\Entity\Musique $music
+     */
+    public function setMusic(\MTI\MusicAndMeBundle\Entity\Musique $music)
+    {
+        $this->music = $music;
+    }
+
+    /**
+     * Get music
+     *
+     * @return MTI\MusicAndMeBundle\Entity\Musique 
+     */
+    public function getMusic()
+    {
+        return $this->music;
+    }
+    public function __construct()
+    {
+        $this->votes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

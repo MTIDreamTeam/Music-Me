@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage;
 
 use MTI\MusicAndMeBundle\Entity\Stream;
+use MTI\MusicAndMeBundle\Entity\Vote;
+use MTI\MusicAndMeBundle\Entity\Musique;
+use MTI\MusicAndMeBundle\Entity\StreamRecords;
 use MTI\MusicAndMeBundle\Entity\User;
 use MTI\MusicAndMeBundle\Entity\LoginUser;
 use MTI\MusicAndMeBundle\Security\Authentication;
@@ -90,13 +93,7 @@ class StreamController extends Controller
 					$em->persist($stream);
 					$em->flush();
 					
-					return $this->render(
-						'MTIMusicAndMeBundle:Stream:index.html.twig',
-						array(
-							'is_connected' => $user == null ? false : true,
-							'user_name' => $userName,
-						)
-					);
+					return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_streamIndex'));
 				}
 				else
 				{
@@ -137,7 +134,7 @@ class StreamController extends Controller
 			);
 		}
 	}
-	
+
 	public function viewAction(Request $request)
 	{
 		$streamId = $request->attributes->get('stream_id');
@@ -148,8 +145,8 @@ class StreamController extends Controller
 		$session = $this->get('session');
 		
 		$user = $this->getDoctrine()
-						->getRepository('MTIMusicAndMeBundle:User')
-						->find($session->get('user_id'));
+					 ->getRepository('MTIMusicAndMeBundle:User')
+					 ->find($session->get('user_id'));
 		
 		$userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
 		
@@ -157,13 +154,199 @@ class StreamController extends Controller
 					   ->getRepository('MTIMusicAndMeBundle:Stream')
 					   ->findOneById($streamId);
 		
+		$now = new \DateTime();
+		$nextRecordsQuery = $this->getDoctrine()
+								 ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+								 ->createQueryBuilder('record')
+								 ->where("record.played > '" . $now->format('Y-m-d H:i:s') . "'")
+								 ->andWhere("record.stream = " . $streamId)
+								 ->orderBy('record.played', 'ASC')
+								 ->getQuery();
+		$nextRecords = $nextRecordsQuery->getResult();
+		
+		$recordsCount = count($nextRecords);
+		$nextRecordsVotes = array();
+		$nextRecordsHasVoted = array();
+		$nextMusicId = array();
+		$nextMusicTitle = array();
+		$nextMusicArtist = array();
+		$nextMusicAlbum = array();
+		$nextMusicCover = array();
+		
+		for ($i = 0; $i < $recordsCount; $i++)
+		{
+			$nextRecordsHasVoted[$i] = false;
+			
+			$music = $nextRecords[$i]->getMusic();
+			$album = $nextRecords[$i]->getMusic()->getAlbum();
+			$votes = $nextRecords[$i]->getVotes();
+			// var_dump($nextRecords[$i]->getVotes()->getId());
+			// die();
+			
+			$nextRecordsVotes[$i] = count($votes);
+			$nextMusicId[$i] = $music->getId();
+			$nextMusicTitle[$i] = $music->getTitle();
+			$nextMusicArtist[$i] = $album->getArtiste()->getName();
+			$nextMusicAlbum[$i] = $album->getTitle();
+			
+			foreach ($votes as $vote)
+			{
+				if ($vote->getUser()->getId() == $user->getId())
+				{
+					$nextRecordsHasVoted[$i] = true;
+					break;
+				}
+			}
+		}
+		
+		$currentRecordQuery = $this->getDoctrine()
+								   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+								   ->createQueryBuilder('record')
+								   ->where("record.played < '" . $now->format('Y-m-d H:i:s') . "'")
+								   ->andWhere("record.stream = " . $streamId)
+								   ->orderBy('record.played', 'DESC')
+								   ->getQuery();
+		$currentRecordResult = $currentRecordQuery->getResult();
+		// var_dump(count($currentRecordResult));die();
+		
+		$currentRecord = null;
+		
+		if (count($currentRecordResult))
+		{
+			$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
+			if ($lastEndTime > $now->getTimestamp())
+			{
+				$currentRecord = $currentRecordResult[0];
+			}
+		}
+		
 		return $this->render(
 			'MTIMusicAndMeBundle:Stream:view.html.twig',
 			array(
 				'is_connected' => $user == null ? false : true,
 				'user_name' => $userName,
 				'stream' => $stream,
+				'records_count' => $recordsCount,
+				'current_record' => $currentRecord,
+				'next_records' => $nextRecords,
+				'next_records_votes' => $nextRecordsVotes,
+				'next_records_has_voted' => $nextRecordsHasVoted,
+				'next_musics_id' => $nextMusicId,
+				'next_musics_title' => $nextMusicTitle,
+				'next_musics_artist' => $nextMusicArtist,
+				'next_musics_album' => $nextMusicAlbum,
 			)
 		);
+	}
+	
+	public function voteAction(Request $request)
+	{
+		$session = $this->get('session');
+		$data = json_decode($this->getRequest()->getContent(), true);
+		
+		$music = $this->getDoctrine()
+					  ->getRepository('MTIMusicAndMeBundle:Musique')
+					  ->findOneById($data['music']);
+
+		$stream = $this->getDoctrine()
+					   ->getRepository('MTIMusicAndMeBundle:Stream')
+					   ->findOneById($data['stream']);
+
+		if ($music == null)
+		{
+			return new Response(
+				json_encode(
+					array(
+						'alert' => array(
+							'type' => 'error',
+							'title' => 'Le vote n\'a pas été pris en compte',
+							'message' => 'La musique demandée pour le vote n\'existe pas',
+						)
+					)
+				)
+			);
+		}
+		if ($stream == null)
+		{
+			return new Response(
+				json_encode(
+					array(
+						'alert' => array(
+							'type' => 'error',
+							'title' => 'Le vote n\'a pas été pris en compte',
+							'message' => 'Le flux demandé pour le vote n\'existe pas',
+						)
+					)
+				)
+			);
+		}
+		
+		$now = new \DateTime();
+		$endMusic = new \DateTime();
+		$endMusic->setTimestamp($now->getTimestamp() - $music->getDuree());
+		
+		$query = $this->getDoctrine()
+					  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+					  ->createQueryBuilder('record')
+					  ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+					  ->andWhere("record.played > '" . $endMusic->format('Y-m-d H:i:s') . "'")
+					  ->getQuery();
+		
+		$records = $query->getResult();
+		
+		$user = $this->getDoctrine()
+					 ->getRepository('MTIMusicAndMeBundle:User')
+					 ->find($session->get('user_id'));
+		
+		// There is a song being played
+		if (count($records))
+		{
+			$streamRecord = $records[0];
+			
+			$vote = new Vote();
+			$vote->setUser($user);
+			$vote->setStreamRecord($streamRecord);
+			
+			$em = $this->getDoctrine()->getEntityManager();
+			$em->persist($vote);
+			$em->flush();
+			
+			$query = $this->getDoctrine()
+						  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+						  ->createQueryBuilder('record')
+						  ->where("record.played > '" . $streamRecord->getPlayed()->format('Y-m-d H:i:s') . "'")
+						  ->orderBy('record.played', 'ASC')
+						  ->getQuery();
+			$nextRecords = $query->getResult();
+		}
+		// No song is being played, play this one !
+		else
+		{
+			$streamRecord = new StreamRecords();
+			$streamRecord->setStream($stream);
+			$streamRecord->setMusic($music);
+			
+			$vote = new Vote();
+			$vote->setUser($user);
+			$vote->setStreamRecord($streamRecord);
+			
+			$em = $this->getDoctrine()->getEntityManager();
+			$em->persist($streamRecord);
+			$em->flush();
+			$em->persist($vote);
+			$em->flush();
+			
+			return new Response(
+				json_encode(
+					array(
+						'alert' => array(
+							'type' => 'success',
+							'title' => 'Le vote a bien été pris en compte',
+							'message' => 'Vous avez voté pour le morceau '.$music->getTitle(),
+						)
+					)
+				)
+			);
+		}
 	}
 }

@@ -60,7 +60,7 @@ class Album
   public function getCoverDir()
   {
 	  // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
-	  return 'uploads/musique/covers';
+	  return '/uploads/musique/covers';
   }
     /**
      * Get id
