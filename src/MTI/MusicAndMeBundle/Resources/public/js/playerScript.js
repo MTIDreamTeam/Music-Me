@@ -1,5 +1,6 @@
-function my_play(url)
+function my_play()
 {
+    var url = "http://127.0.1.1/MusicAndMe/next.php";
     var httpRequest = false;
 
     if (window.XMLHttpRequest) { // Mozilla, Safari,...
