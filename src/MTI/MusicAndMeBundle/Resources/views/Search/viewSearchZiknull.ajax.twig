@@ -1,10 +1,10 @@
 <span id="reload-header" data-reload-value="false" style="{display:none}"></span>
 <ul class="breadcrumb">
 <li>
-<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
+<a href="{{ path('MTIMusicAndMeBundle_homepage') }}" onclick="callAjax('', '/'); return false;">Music &amp; Me</a> <span class="divider">/</span>
 </li>
 <li>
-<a href="{{ path('MTIMusicAndMeBundle_searchZik') }}">Recherche de musique</a> <span class="divider">/</span>
+<a href="{{ path('MTIMusicAndMeBundle_searchZik') }}" onclick="callAjax('', '/searchzik/'); return false;">Recherche de musique</a> <span class="divider">/</span>
 </li>
 <li class="active">{{ toSearch }}</li>
 </ul>
@@ -12,8 +12,8 @@
 	<div class="row">
 		<div class="span12">
 		<h3>Aucun résulat n'a été trouvé pour la recherche {{ toSearch }}</h3><br/>
-			<form class="form-horizontal" action="#" method="post">
-				<input type="text" class="search-query span2" placeholder="Rechercher une musique" name="searchZik">
+			<form class="form-horizontal" action="#" method="post" id="search-zik-form">
+				<input type="text" class="search-query span2" placeholder="Rechercher une musique" name="searchZik" id="searchZikId">
 			</form>
 		</div>
 	</div>

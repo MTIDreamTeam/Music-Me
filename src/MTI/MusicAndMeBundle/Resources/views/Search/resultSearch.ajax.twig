@@ -1,7 +1,7 @@
 <span id="reload-header" data-reload-value="false" style="{display:none}"></span>
 <ul class="breadcrumb">
 	<li>
-		<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
+	<a href="{{ path('MTIMusicAndMeBundle_homepage') }}" onclick="callAjax('', '/'); return false;">Music &amp; Me</a> <span class="divider">/</span>
 	</li>
 	<li class="active">Recherche de flux<span class="divider">></span><span id="search_text">{{ toSearch }}</span></li>
 </ul>

@@ -21,7 +21,6 @@ class SearchZikController extends Controller
   {  
     if (!Authentication::isAuthenticated($request))
       return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
-    
     $session = $this->get('session');
     
     $user = $this->getDoctrine()
@@ -30,9 +29,14 @@ class SearchZikController extends Controller
     
     $userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
    
-    if ($this->getRequest()->getMethod() === 'POST') {
-      $toSearch = $request->request->get('searchZik');
-    
+if ($this->getRequest()->getMethod() === 'POST') {
+		if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
+		{
+			$data = json_decode($this->getRequest()->getContent(), true);
+			$toSearch = $data['searchZik'];;
+		}
+		else
+			$toSearch = $request->request->get('searchZik');
 
       $liste_zik = $this->getDoctrine()
       ->getEntityManager()
@@ -81,8 +85,7 @@ class SearchZikController extends Controller
 				)
 			);
 	}
-    }
-    
+    } 
     else {
 	    if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
 		return $this->render(
@@ -100,8 +103,6 @@ class SearchZikController extends Controller
 			'user_name' => $userName,
 			)
 		);
-	    
-	    
     }
   }
 }

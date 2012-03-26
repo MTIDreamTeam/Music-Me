@@ -54,6 +54,12 @@ $("#search-flux-form").submit(function(){
 	return callAjax(DATA, "/search/");
 });
 
+$("#search-zik-form").submit(function(){
+	var DATA = '{"searchZik":"' + $("#searchZikId").val() + '"}';
+	$("#searchZikId").val("");
+	return callAjax(DATA, "/searchzik/");
+});
+
 function reloadHeader()
 {
 	$.ajax({
