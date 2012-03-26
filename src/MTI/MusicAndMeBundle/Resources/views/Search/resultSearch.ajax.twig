@@ -1,6 +1,7 @@
+<span id="reload-header" data-reload-value="false" style="{display:none}"></span>
 <ul class="breadcrumb">
 	<li>
-		<a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
+	<a href="{{ path('MTIMusicAndMeBundle_homepage') }}" onclick="callAjax('', '/'); return false;">Music &amp; Me</a> <span class="divider">/</span>
 	</li>
 	<li class="active">Recherche de flux<span class="divider">></span><span id="search_text">{{ toSearch }}</span></li>
 </ul>
@@ -11,48 +12,30 @@
 	</div>
 	<table class="table">
 		<tbody>
+			{% for stream in listeStream %}
 			<tr>
 				<td>
-				    <div class="multi-cover">
-				      <table class="multi-cover-table">
+					<!--<div class="multi-cover">
+					<table class="multi-cover-table">
 					<tr>
-					  <td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
-					  <td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
+						<td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
+						<td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
 					</tr>
 					<tr>
-					  <td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
-					  <td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
+						<td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
+						<td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
 					</tr>
-				      </table>
-				    </div>
+					</table>
+					</div>-->
 				</td>
-				<td>Lorem Ipsum</td>
+				<td>{{ stream.name }}</td>
+				<td>{{ stream.owner.firstname }}{{ stream.owner.lastname }}</td>
 				<td><span class="label label-important">12</span></td>
 				<td>
 					<div class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Écouter !"><i class="icon-play icon-white"></i></div>
 				</td>
 			</tr>
-			<tr>
-				<td>
-				    <div class="multi-cover">
-				      <table class="multi-cover-table">
-					<tr>
-					  <td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
-					  <td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
-					</tr>
-					<tr>
-					  <td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
-					  <td><img class="multi-cover-img" src="../images/cover_thumb.jpg" alt=""></td>
-					</tr>
-				      </table>
-				    </div>
-				</td>
-				<td>Lorem Ipsum</td>
-				<td><span class="label label-important">11</span></td>
-				<td>
-					<div class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Écouter !"><i class="icon-play icon-white"></i></div>
-				</td>
-			</tr>
+			{% endfor %}
 		</tbody>
 	</table>
 </section>
