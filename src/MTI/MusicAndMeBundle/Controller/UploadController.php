@@ -151,7 +151,6 @@ class UploadController extends Controller
 	if (is_dir($zik->getUploadRootDir()."/covers"))
 		mkdir($zik->getUploadRootDir()."/covers", 0755, true) or die("Unable to create\n");
 	mkdir($zik->album->getCoverRootDir()."/".$art->name, 0755, true) or die("Unable to create\n");
-	//echo "create artiste<br>";
 	$em->persist($art);
       }
       else

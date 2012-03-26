@@ -68,7 +68,14 @@ class Musique
 	return $duree;
     }
 
-     
+    static public  function  secToDuree($sec)
+    {
+	$min = $sec / 60;
+	$rest = $sec % $min;
+	$duree = $min.":".$rest;
+	return $duree;
+    }
+
     
     public function getAbsolutePath()
     {
@@ -95,14 +102,14 @@ class Musique
 
     public function upload($art, $alb)
     {
-	if (null === $this->file) {
-		return;
-	}
-
-	$getid3 = new \getID3_getID3();
-	$getid3->encoding = 'UTF-8';
-	$info = $getid3->Analyze($this->file);
-
+      if (null === $this->file) {
+	return;
+      }
+      
+      $getid3 = new \getID3_getID3();
+      $getid3->encoding = 'UTF-8';
+      $info = $getid3->Analyze($this->file);
+      
 	if (isset($getid3->info['tags']['id3v2']))
 	{
 		if (isset($getid3->info['tags']['id3v2']['title']) &&

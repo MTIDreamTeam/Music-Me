@@ -156,7 +156,6 @@ class AccountController extends Controller
 												->add('password', 'password')
 												->getForm();
 		$userName = null;
-
 		if ($request->getMethod() == 'POST')
 		{
 			$form->bindRequest($request);
