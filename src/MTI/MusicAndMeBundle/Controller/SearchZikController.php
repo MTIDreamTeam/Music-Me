@@ -29,7 +29,7 @@ class SearchZikController extends Controller
     
     $userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
    
-if ($this->getRequest()->getMethod() === 'POST') {
+   if ($this->getRequest()->getMethod() === 'POST' && json_decode($this->getRequest()->getContent(), true) != null) {
 		if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
 		{
 			$data = json_decode($this->getRequest()->getContent(), true);

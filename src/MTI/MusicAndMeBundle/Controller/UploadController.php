@@ -45,16 +45,6 @@ class UploadController extends Controller
 		$this->saveZik($zik, true);
 	    }   
       }
-      if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-	return $this->render(
-		'MTIMusicAndMeBundle:Upload:index.ajax.twig',
-		array(
-		'is_connected' => $user == null ? false : true,
-		'user_name' => $userName,
-		'form' => $form->createView(),
-		)
-	);
-      else
 	return $this->render(
 		'MTIMusicAndMeBundle:Upload:index.html.twig',
 		array(
@@ -158,6 +148,8 @@ class UploadController extends Controller
       
       if (!$artiste) {
 	mkdir($zik->getUploadRootDir()."/".$art->name, 0755, true) or die("Unable to create\n");
+	if (is_dir($zik->getUploadRootDir()."/covers"))
+		mkdir($zik->getUploadRootDir()."/covers", 0755, true) or die("Unable to create\n");
 	mkdir($zik->album->getCoverRootDir()."/".$art->name, 0755, true) or die("Unable to create\n");
 	//echo "create artiste<br>";
 	$em->persist($art);
