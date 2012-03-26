@@ -53,8 +53,8 @@ MTIMusicAndMeBundle_streamVote:
         _method: POST
 
 MTIMusicAndMeBundle_search:
-    pattern:  /search/{toSearch}
-    defaults: { _controller: MTIMusicAndMeBundle:Search:index, toSearch:# }
+    pattern:  /search
+    defaults: { _controller: MTIMusicAndMeBundle:Search:index }
 
 # Upload Routes #
 #################
@@ -62,3 +62,10 @@ MTIMusicAndMeBundle_search:
 MTIMusicAndMeBundle_upload:
     pattern:  /upload
     defaults: { _controller: MTIMusicAndMeBundle:Upload:index }
+
+# Musiques Routes #
+###################
+
+MTIMusicAndMeBundle_searchZik:
+    pattern:  /searchzik
+    defaults: { _controller: MTIMusicAndMeBundle:SearchZik:index }

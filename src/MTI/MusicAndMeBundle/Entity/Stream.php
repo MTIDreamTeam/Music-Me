@@ -41,6 +41,11 @@ class Stream
 	 * @ORM\OneToMany(targetEntity="StreamRecords", mappedBy="stream")
 	 */
 	protected $streamRecords;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Vote", mappedBy="stream")
+	 */
+	protected $votes;
 
 	/**
 	 * @ORM\PrePersist

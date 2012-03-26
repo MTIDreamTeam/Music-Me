@@ -3,7 +3,7 @@ namespace MTI\MusicAndMeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Component\DependencyInjection\SimpleXMLElement;
 
 
 /**
@@ -28,8 +28,40 @@ class Album
    */
   public $artiste;
   
+  /**
+   * @ORM\Column(type="string", length=255, nullable=true)
+   */
+  public $coverPath;
   
+  public function getCoverRootDir()
+  {
+	  // the absolute directory path where uploaded documents should be saved
+	  return __DIR__.'/../../../../web/'.$this->getCoverDir();
+  }
 
+  public function getCover()
+  {
+      $xml_request_url = 'http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=b25b959554ed76058ac220b7b2e0a026&artist='
+      .urlencode($this->artiste->name).'&album='.urlencode($this->title);
+      $xml = new SimpleXMLElement($xml_request_url, null, true);
+      if (!isset($xml) || $xml == null || $xml == "")
+	      return "n";
+      if ($xml->getName() == "lfm")
+      {
+	foreach($xml->attributes() as $a => $b) {
+	  if ($b != "ok")
+	    return;
+	}
+	$children = $xml->children()->children();
+	return $children->image[0];
+      }
+  }
+    
+  public function getCoverDir()
+  {
+	  // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
+	  return 'uploads/musique/covers';
+  }
     /**
      * Get id
      *
@@ -78,5 +110,25 @@ class Album
     public function getArtiste()
     {
         return $this->artiste;
+    }
+
+    /**
+     * Get coverPath
+     *
+     * @return string
+     */
+    public function getCoverPath()
+    {
+	    return $this->coverPath;
+    }
+    
+    /**
+     * Set coverPath
+     *
+     * @param string $coverPath
+     */
+    public function setCoverPath($coverPath)
+    {
+	    $this->coverPath = $coverPath;
     }
 }
