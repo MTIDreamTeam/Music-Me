@@ -39,7 +39,7 @@ function alertContents(httpRequest)
             $("#jquery_jplayer_1").jPlayer("setMedia", {
                     mp3:httpRequest.responseText
             });
-            $("#jquery_jplayer_1").jPlayer("play", 60);
+            $("#jquery_jplayer_1").jPlayer("play");
 
         } else {
             window.alert('Un problème est survenu avec la requête.');
