@@ -80,7 +80,7 @@ class Musique
 
     public function getWebPath()
     {
-        return null === $this->path ? null : $this->getUploadDir().'/'.$this->path;
+        return null === $this->path ? null : str_replace(' ', '%20', $this->getUploadDir().'/'.$this->path);
     }
 
     public function getUploadRootDir()
@@ -92,7 +92,7 @@ class Musique
     public function getUploadDir()
     {
         // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
-        return 'uploads/musique';
+        return '/uploads/musique';
     }
 
 

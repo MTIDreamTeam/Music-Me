@@ -13,6 +13,7 @@
 		{% block header %}
 			{% include 'MTIMusicAndMeBundle:Header:header.html.twig' with {'user_name': user_name, 'is_connected': is_connected} %}
 		{% endblock %}
+		{% if app.session.get('playing_stream') %}<div id="playing-stream" style="display: none;">{{ app.session.get('playing_stream') }}</div>{% endif %}
 		<div class="container">
 			<div id="error-alert" class="alert alert-error alert-block" style="display: none;">
 				<a class="close">×</a>
@@ -36,9 +37,9 @@
 			</div>
 		{% block content %}{% endblock %}
 		</div>
-		<!-- {% block footer %}
+		{% block footer %}
 			{% include 'MTIMusicAndMeBundle:UI:player.html.twig' %}
-		{% endblock %} -->
+		{% endblock %}
 		{% javascripts
 		    '@MTIMusicAndMeBundle/Resources/public/js/jquery-1.7.1.min.js'
 		    '@MTIMusicAndMeBundle/Resources/public/js/jquery.json-2.3.min.js'

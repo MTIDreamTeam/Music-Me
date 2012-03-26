@@ -18,11 +18,14 @@
 					</li>
 					{% for stream in my_streams %}
 					<li class="span2">
-						<div class="thumbnail">
+						<div class="thumbnail actual-stream">
 							<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ stream.id }}"><img src="/images/cover.jpg" alt="" /></a>
 							<div class="caption">
 								<h5>{{ stream.name }}</h5>
-								<p>5 écoutes</p>
+								<p style="display: none;" class="stream-id">{{ stream.id }}</p>
+								<p class="music-name">Aucune lecture en cours</p>
+								<p class="music-artist"></p>
+								<p class="music-album"></p>
 							</div>
 						</div>
 					</li>

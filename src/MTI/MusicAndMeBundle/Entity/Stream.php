@@ -54,7 +54,7 @@ class Stream
 	{
 	    $this->created = new \DateTime();
 	}
-
+	
     /**
      * Get id
      *
