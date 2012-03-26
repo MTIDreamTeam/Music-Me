@@ -72,15 +72,6 @@ class Musique
 	$duree = $min.":".$rest;
 	return $duree;
     }
-
-    static public  function  secToDuree($sec)
-    {
-	$min = $sec / 60;
-	$rest = $sec % $min;
-	$duree = $min.":".$rest;
-	return $duree;
-    }
-
     
     public function getAbsolutePath()
     {
