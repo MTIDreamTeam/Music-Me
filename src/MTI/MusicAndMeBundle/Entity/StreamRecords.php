@@ -39,7 +39,7 @@ class StreamRecords
     protected $music;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Vote", mappedBy="streamRecord")
+	 * @ORM\OneToMany(targetEntity="Vote", mappedBy="streamRecords")
 	 */
 	protected $votes;
 
@@ -190,7 +190,7 @@ class StreamRecords
     {
         $this->votes = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Add votes
      *

@@ -142,9 +142,9 @@ class Vote
     /**
      * Set streamRecord
      *
-     * @param MTI\MusicAndMeBundle\Entity\StreamRecord $streamRecord
+     * @param MTI\MusicAndMeBundle\Entity\StreamRecords $streamRecord
      */
-    public function setStreamRecord(\MTI\MusicAndMeBundle\Entity\StreamRecord $streamRecord)
+    public function setStreamRecord(\MTI\MusicAndMeBundle\Entity\StreamRecords $streamRecord)
     {
         $this->streamRecord = $streamRecord;
     }

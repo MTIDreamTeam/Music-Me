@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage;
 
 use MTI\MusicAndMeBundle\Entity\Stream;
+use MTI\MusicAndMeBundle\Entity\Vote;
 use MTI\MusicAndMeBundle\Entity\Musique;
 use MTI\MusicAndMeBundle\Entity\StreamRecords;
 use MTI\MusicAndMeBundle\Entity\User;
@@ -172,7 +173,6 @@ class StreamController extends Controller
 		$nextMusicAlbum = array();
 		$nextMusicCover = array();
 		
-		
 		for ($i = 0; $i < $recordsCount; $i++)
 		{
 			$nextRecordsHasVoted[$i] = false;
@@ -180,6 +180,8 @@ class StreamController extends Controller
 			$music = $nextRecords[$i]->getMusic();
 			$album = $nextRecords[$i]->getMusic()->getAlbum();
 			$votes = $nextRecords[$i]->getVotes();
+			// var_dump($nextRecords[$i]->getVotes()->getId());
+			// die();
 			
 			$nextRecordsVotes[$i] = count($votes);
 			$nextMusicId[$i] = $music->getId();
@@ -208,10 +210,6 @@ class StreamController extends Controller
 		// var_dump(count($currentRecordResult));die();
 		
 		$currentRecord = null;
-		$currentRecordId = null;
-		$currentRecordTitle = null;
-		$currentRecordArtist = null;
-		$currentRecordAlbum = null;
 		
 		if (count($currentRecordResult))
 		{
@@ -219,10 +217,6 @@ class StreamController extends Controller
 			if ($lastEndTime > $now->getTimestamp())
 			{
 				$currentRecord = $currentRecordResult[0];
-				$currentRecordId = $currentRecord->getId();
-				$currentRecordTitle = $currentRecord->getMusic()->getTitle();
-				$currentRecordArtist = $currentRecord->getMusic()->getAlbum()->getArtiste()->getName();
-				$currentRecordAlbum = $currentRecord->getMusic()->getAlbum()->getTitle();
 			}
 		}
 		
@@ -234,10 +228,6 @@ class StreamController extends Controller
 				'stream' => $stream,
 				'records_count' => $recordsCount,
 				'current_record' => $currentRecord,
-				'current_record_id' => $currentRecordId,
-				'current_record_title' => $currentRecordTitle,
-				'current_record_artist' => $currentRecordArtist,
-				'current_record_album' => $currentRecordAlbum,
 				'next_records' => $nextRecords,
 				'next_records_votes' => $nextRecordsVotes,
 				'next_records_has_voted' => $nextRecordsHasVoted,

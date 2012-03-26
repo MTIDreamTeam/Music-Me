@@ -11,7 +11,7 @@
   <li class="active">{{ toSearch }}</li>
 </ul>
 	<section id="search-zik">
-
+		<div id="stream-id" style="display: none;">{{ stream_id }}</div>
 		<div>
 			<h3>&ensp;</h3>
 		</div>
@@ -28,13 +28,14 @@
 			<tbody>
 			{% for zik in listeZik %}
 				<tr>
+					<td class="music-id" style="display: none;">{{ zik.id }}</td>
 					<td>
 					<img class="thumbnail" src="{{ zik.album.getCoverPath() }}" alt="">
 					</td>
 					<td>{{ zik.title }}</td>
 					<td>{{ zik.album.title }}</td>
 					<td>{{ zik.album.artiste.name }}</td>
-					<td><div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Ajouter !"><i class="icon-plus icon-black"></i></td>
+					<td><div class="btn tip" data-placement="bottom" rel="popover" data-original-title="Ajouter et voter !"><i class="icon-plus icon-black"></i></td>
 				</tr>
 			{% endfor %}
 			</tbody>

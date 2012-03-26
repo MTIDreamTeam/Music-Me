@@ -18,7 +18,9 @@ class SearchZikController extends Controller
 {
   
   public function indexAction(Request $request)
-  {  
+  {
+	  $streamId = $request->attributes->get('stream_id');
+	  
     if (!Authentication::isAuthenticated($request))
       return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
     
@@ -45,7 +47,8 @@ class SearchZikController extends Controller
 	  array(
 	    'is_connected' => $user == null ? false : true,
 	    'user_name' => $userName,
-	    'toSearch' => $toSearch
+	    'toSearch' => $toSearch,
+		'stream_id' => $streamId
 	  )
 	  );
       }
@@ -56,7 +59,8 @@ class SearchZikController extends Controller
 	    'is_connected' => $user == null ? false : true,
 	    'user_name' => $userName,
 	    'toSearch' => $toSearch,
-	    'listeZik' => $liste_zik
+	    'listeZik' => $liste_zik,
+		'stream_id' => $streamId
 	)
 	);
       }

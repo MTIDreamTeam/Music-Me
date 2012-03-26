@@ -51,11 +51,14 @@ jQuery(document).ready(function($) {
 	{
 		cell.find('.spinner').parent().remove();
 		cell.append(error);
-		showError(data['alert']['title'], data['alert']['message']);
-		setTimeout(function() {
-			$('td >	 div.btn-danger').remove();
-			button.fadeIn();
-		}, 2000);
+		if (data && data['alert'] && data['alert']['title'] && data['alert']['message'])
+		{
+			showError(data['alert']['title'], data['alert']['message']);
+			setTimeout(function() {
+				$('td >	 div.btn-danger').remove();
+				button.fadeIn();
+			}, 2000);
+		}
 	}
 
 	function handleVoteSuccess(data, cell)
@@ -66,7 +69,7 @@ jQuery(document).ready(function($) {
 	}
 
 	// pre fetched UI elements
-	var voteButtons = $('#stream-musics td div.btn:has(i.icon-arrow-up)');
+	var voteButtons = $('#stream-musics td div.btn:has(i.icon-arrow-up), #search-zik td div.btn:has(i.icon-plus)');
 	var playButton = $('#stream-musics td div.btn:has(i.icon-play)');
 	
 	
@@ -85,6 +88,7 @@ jQuery(document).ready(function($) {
 		var voteContent = {};
 		voteContent['stream'] = parseInt($('#stream-id').html());
 		voteContent['music'] = parseInt(cell.siblings('.music-id').html());
+		console.log(voteContent['music']);
 		
 		$.ajax({
 			type: 'POST',
@@ -92,12 +96,21 @@ jQuery(document).ready(function($) {
 			dataType: 'json',
 			data: $.toJSON(voteContent),
 			success: function(data) {
+				if (button.closest('#search-zik').length)
+				{
+					console.log('boom');
+					window.location.replace( '/stream/'+voteContent['stream'] );
+					return;
+				}
+				else
+				console.log('fuck');
 				if (data['alert'] && data['alert']['type'] == 'success')
 					handleVoteSuccess(data, cell);
-				else
+				else if (data['alert'] && data['alert']['type'] == 'error')
 					handleVoteError(data, cell, button);
 			},
 			error: function(data) {
+				console.log('error');
 				handleVoteError(data, cell, button);
 			}
 		});
