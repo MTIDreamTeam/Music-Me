@@ -81,7 +81,7 @@ header {
 /* @group Player */
 
 #player {
-	height: 80px;
+	height: 50px;
 }
 
 #player .progress {

@@ -113,6 +113,8 @@ jQuery(document).ready(function($) {
 					$("audio").bind('playing', function(){
 						updateProgessBar();
 						this.currentTime = data['time'];
+						// $('.progress .bar').css('width', '0%');
+						updateProgessBar();
 					});
 				}
 			},

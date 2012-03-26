@@ -17,10 +17,10 @@ class MusiqueRepository extends EntityRepository
       $query = $this->_em->createQuery('SELECT m, a, art FROM MTI\MusicAndMeBundle\Entity\Musique m
 						  JOIN m.album a
 						  JOIN a.artiste art
-						  WHERE LOWER(m.title) = :search
-						  OR LOWER(a.title) = :search
-						  OR LOWER(art.name) = :search');
-      $query->setParameter('search', strtolower($toSearch));
+						  WHERE LOWER(m.title) LIKE :search
+						  OR LOWER(a.title) LIKE :search
+						  OR LOWER(art.name) LIKE :search');
+      $query->setParameter('search', '%'.strtolower($toSearch).'%');
       return $query->getResult();
     }
 }
