@@ -36,11 +36,13 @@ function alertContents(httpRequest)
     {
         if (httpRequest.status == 200)
         {
+            var txt = httpRequest.responseText.split("|");
+
             $("#jquery_jplayer_1").jPlayer("clearMedia");
             $("#jquery_jplayer_1").jPlayer("setMedia", {
-                    mp3:httpRequest.responseText
+                    mp3:txt[0]
             });
-            $("#jquery_jplayer_1").jPlayer("play");
+            $("#jquery_jplayer_1").jPlayer("play", parseInt(txt[1]));
 
         } else {
             window.alert('Un problème est survenu avec la requête.');
