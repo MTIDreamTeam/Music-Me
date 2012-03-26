@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage;
 
 use MTI\MusicAndMeBundle\Entity\Stream;
+use MTI\MusicAndMeBundle\Entity\PlayedStream;
 use MTI\MusicAndMeBundle\Entity\Vote;
 use MTI\MusicAndMeBundle\Entity\Musique;
 use MTI\MusicAndMeBundle\Entity\StreamRecords;
@@ -321,10 +322,30 @@ class StreamController extends Controller
 			$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
 			if ($lastEndTime > $now->getTimestamp())
 			{
+				$currentRecord = $currentRecordResult[0];
+
+				// Logs in Database
+				if ($session->get('show_player') == false)
+				{
+					$user = $this->getDoctrine()
+								 ->getRepository('MTIMusicAndMeBundle:User')
+								 ->findOneById($session->get('user_id'));
+					$stream = $this->getDoctrine()
+								   ->getRepository('MTIMusicAndMeBundle:Stream')
+								   ->findOneById($streamId);
+				
+					$playedStream = new PlayedStream();
+					$playedStream->setUser($user);
+					$playedStream->setStream($stream);
+					$em = $this->getDoctrine()->getEntityManager();
+					$em->persist($playedStream);
+					$em->flush();
+				}
+				
 				$session->set('show_player', true);
 				$session->set('playing_stream', $streamId);
 				
-				$currentRecord = $currentRecordResult[0];
+				
 				return new Response(
 					json_encode(
 						array(

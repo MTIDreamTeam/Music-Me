@@ -76,7 +76,7 @@ jQuery(document).ready(function($) {
 		{
 			var percentage = (100.0 * audio.currentTime) / audio.duration;
 			$('.progress .bar').css('width', percentage+'%');
-			setTimeout(function() { updateProgessBar(); }, 500);
+			setTimeout(function() { updateProgessBar(); }, 100);
 		}
 	}
 

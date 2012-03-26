@@ -7,6 +7,7 @@ use Doctrine\ORM\Events;
 
 use MTI\MusicAndMeBundle\Entity\User;
 
+
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
@@ -46,6 +47,11 @@ class Stream
 	 * @ORM\OneToMany(targetEntity="Vote", mappedBy="stream")
 	 */
 	protected $votes;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="PlayedStream", mappedBy="stream")
+	 */
+	protected $playedStreams;
 
 	/**
 	 * @ORM\PrePersist
@@ -167,5 +173,25 @@ class Stream
     public function getVotes()
     {
         return $this->votes;
+    }
+
+    /**
+     * Add playedStreams
+     *
+     * @param MTI\MusicAndMeBundle\Entity\PlayedStream $playedStreams
+     */
+    public function addPlayedStream(\MTI\MusicAndMeBundle\Entity\PlayedStream $playedStreams)
+    {
+        $this->playedStreams[] = $playedStreams;
+    }
+
+    /**
+     * Get playedStreams
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getPlayedStreams()
+    {
+        return $this->playedStreams;
     }
 }

@@ -51,6 +51,11 @@ class User
 	 */
 	protected $votes;
 	
+	/**
+	 * @ORM\OneToMany(targetEntity="PlayedStream", mappedBy="user")
+	 */
+	protected $playedStreams;
+	
     /**
      * @ORM\Column(type="datetime")
      */
@@ -217,5 +222,25 @@ class User
     public function getVotes()
     {
         return $this->votes;
+    }
+
+    /**
+     * Add playedStreams
+     *
+     * @param MTI\MusicAndMeBundle\Entity\PlayedStream $playedStreams
+     */
+    public function addPlayedStream(\MTI\MusicAndMeBundle\Entity\PlayedStream $playedStreams)
+    {
+        $this->playedStreams[] = $playedStreams;
+    }
+
+    /**
+     * Get playedStreams
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getPlayedStreams()
+    {
+        return $this->playedStreams;
     }
 }
