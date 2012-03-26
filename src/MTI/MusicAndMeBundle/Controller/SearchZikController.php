@@ -33,7 +33,7 @@ class SearchZikController extends Controller
 		if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
 		{
 			$data = json_decode($this->getRequest()->getContent(), true);
-			$toSearch = $data['searchZik'];;
+			$toSearch = $data['searchZik'];
 		}
 		else
 			$toSearch = $request->request->get('searchZik');
