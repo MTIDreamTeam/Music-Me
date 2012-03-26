@@ -12,4 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class StreamRepository extends EntityRepository
 {
+	public function searchStream($toSearch)
+	{
+		$query = $this->_em->createQuery('SELECT s, o FROM MTI\MusicAndMeBundle\Entity\Stream s
+		JOIN s.owner o
+		WHERE LOWER(s.name) LIKE :search
+		OR LOWER(o.firstname) LIKE :search
+		OR LOWER(o.lastname) LIKE :search');
+		$query->setParameter('search', '%'.strtolower($toSearch).'%');
+		return $query->getResult();
+	}
 }

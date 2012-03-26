@@ -16,29 +16,25 @@ use MTI\MusicAndMeBundle\Security\Authentication;
 
 class SearchZikController extends Controller
 {
-  
+
   public function indexAction(Request $request)
   {
 	  $streamId = $request->attributes->get('stream_id');
-	  
+
     if (!Authentication::isAuthenticated($request))
       return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
+
     $session = $this->get('session');
-    
+
     $user = $this->getDoctrine()
     ->getRepository('MTIMusicAndMeBundle:User')
     ->find($session->get('user_id'));
-    
+
     $userName = $user == null ? null : $user->getFirstname() . ' ' . $user->getLastname();
-   
-   if ($this->getRequest()->getMethod() === 'POST' && json_decode($this->getRequest()->getContent(), true) != null) {
-		if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-		{
-			$data = json_decode($this->getRequest()->getContent(), true);
-			$toSearch = $data['searchZik'];
-		}
-		else
-			$toSearch = $request->request->get('searchZik');
+
+    if ($this->getRequest()->getMethod() === 'POST') {
+      $toSearch = $request->request->get('searchZik');
+
 
       $liste_zik = $this->getDoctrine()
       ->getEntityManager()
@@ -68,25 +64,17 @@ class SearchZikController extends Controller
 	)
 	);
       }
-      
+
     }
+
     else {
-	    if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-		return $this->render(
-			'MTIMusicAndMeBundle:Search:viewSearchZik.ajax.twig',
-			array(
-			'is_connected' => $user == null ? false : true,
-			'user_name' => $userName,
-			)
-		);
-	    else
-		return $this->render(
-			'MTIMusicAndMeBundle:Search:viewSearchZik.html.twig',
-			array(
-			'is_connected' => $user == null ? false : true,
-			'user_name' => $userName,
-			)
-		);
+    return $this->render(
+      'MTIMusicAndMeBundle:Search:viewSearchZik.html.twig',
+      array(
+	'is_connected' => $user == null ? false : true,
+	'user_name' => $userName,
+	)
+	);
     }
   }
 }

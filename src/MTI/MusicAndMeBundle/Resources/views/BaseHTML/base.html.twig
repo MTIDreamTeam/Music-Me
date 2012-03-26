@@ -35,9 +35,7 @@
 				<h4 class="alert-heading"></h4>
 				<span></span>
 			</div>
-		<div class="container" id="block-content">
 		{% block content %}{% endblock %}
-		</div>
 		</div>
 		{% block footer %}
 			{% include 'MTIMusicAndMeBundle:UI:player.html.twig' %}
@@ -49,5 +47,6 @@
 			'@MTIMusicAndMeBundle/Resources/public/js/script.js'
 		%}
 		<script src="{{ asset_url }}"></script>
+		{% endjavascripts %}
 	</body>
 </html>
