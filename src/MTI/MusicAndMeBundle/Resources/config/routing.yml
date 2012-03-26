@@ -65,6 +65,27 @@ MTIMusicAndMeBundle_searchZik:
     pattern:  /stream/{stream_id}/search/
     defaults: { _controller: MTIMusicAndMeBundle:SearchZik:index, stream_id:-1 }
 
+MTIMusicAndMeBundle_streamPlay:
+    pattern:  /stream/{stream_id}/play/
+    defaults: { _controller: MTIMusicAndMeBundle:Stream:play, stream_id:-1, _format: json }
+    requirements:
+        _format: json
+        _method: POST
+
+MTIMusicAndMeBundle_streamStop:
+    pattern:  /stream/{stream_id}/stop/
+    defaults: { _controller: MTIMusicAndMeBundle:Stream:stop, stream_id:-1, _format: json }
+    requirements:
+        _format: json
+        _method: POST
+
+MTIMusicAndMeBundle_streamCurrentSong:
+    pattern:  /stream/{stream_id}/current/
+    defaults: { _controller: MTIMusicAndMeBundle:Stream:currentSong, stream_id:-1, _format: json }
+    requirements:
+        _format: json
+        _method: POST
+
 # Upload Routes #
 #################
 

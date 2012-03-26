@@ -1,5 +1,33 @@
 {% extends 'MTIMusicAndMeBundle:BaseHTML:base.html.twig' %}
 
 {% block content %}
-	{% include 'MTIMusicAndMeBundle:Home:index.ajax.twig' %}
+	<ul class="breadcrumb">
+		<li class="active">Music &amp; Me</li>
+	</ul>
+	<header class="jumbotron masthead">
+		<div class="inner">
+			<h1>Music & Me</h1>
+			<p>Vous êtes tous DJ de la soirée.</p>
+		</div>
+	</header>
+	<section id="fluidGridSystem">
+		<div class="row">
+			<div class="span4">
+				<h2>Écoutez</h2>
+				<p>toute votre musique à porté de main grâce à
+flux et vos playlists. Electro, pop, rock, ...<br/>Faites-vous plaisir en écoutant la musique
+que vous aimez où que vous soyez.</p>
+			</div>
+			<div class="span4">
+				<h2>Partagez</h2>
+				<p>la musique qui vous fait vibrer, découvrez de
+nouveaux horizons en écoutant les playlists partagées.<br/>Et faites-les découvrir
+à tous vos amis.</p>
+			</div>
+			<div class="span4">
+				<h2>Let's go !</h2>
+				<p>Tout est prêt pour passer une excellente soirée.</p>
+			</div>
+		</div>
+	</section>
 {% endblock %}

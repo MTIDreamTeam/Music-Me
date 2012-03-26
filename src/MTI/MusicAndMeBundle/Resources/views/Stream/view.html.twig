@@ -37,7 +37,13 @@
 					<td>{{ current_record.music.title }} — {{ current_record.music.getAlbum().getArtiste().getName() }} — {{ current_record.music.album.title }}</td>
 					<td><span class="label label-important">En ce moment</span></td>
 					<td>
+						{% if app.session.get('playing_stream') == stream.id %}
+						<div style="display: none;" class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Écouter !"><i class="icon-play icon-white"></i></div>
+						<div class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Arrêter la lecture"><i class="icon-stop icon-white"></i></div>
+						{% else %}
 						<div class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Écouter !"><i class="icon-play icon-white"></i></div>
+						<div style="display: none;" class="btn btn-primary tip" data-placement="bottom" rel="popover" data-original-title="Arrêter la lecture"><i class="icon-stop icon-white"></i></div>
+						{% endif %}
 					</td>
 				</tr>
 				{% if records_count %}
@@ -63,8 +69,7 @@
 				{% endif %}
 			</tbody>
 		</table>
-		{% else %}
-			<a href="{{ path('MTIMusicAndMeBundle_searchZik', { 'stream_id' : stream.id }) }}" class="btn btn-primary">Ajouter une musique au flux</a>
 		{% endif %}
+		<a href="{{ path('MTIMusicAndMeBundle_searchZik', { 'stream_id' : stream.id }) }}" class="btn">Ajouter une musique au flux</a>
 	</section>
 {% endblock %}

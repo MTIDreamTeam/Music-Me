@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage;
 
 use MTI\MusicAndMeBundle\Entity\Stream;
+use MTI\MusicAndMeBundle\Entity\PlayedStream;
 use MTI\MusicAndMeBundle\Entity\Vote;
 use MTI\MusicAndMeBundle\Entity\Musique;
 use MTI\MusicAndMeBundle\Entity\StreamRecords;
@@ -202,7 +203,7 @@ class StreamController extends Controller
 		$currentRecordQuery = $this->getDoctrine()
 								   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
 								   ->createQueryBuilder('record')
-								   ->where("record.played < '" . $now->format('Y-m-d H:i:s') . "'")
+								   ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
 								   ->andWhere("record.stream = " . $streamId)
 								   ->orderBy('record.played', 'DESC')
 								   ->getQuery();
@@ -235,6 +236,135 @@ class StreamController extends Controller
 				'next_musics_title' => $nextMusicTitle,
 				'next_musics_artist' => $nextMusicArtist,
 				'next_musics_album' => $nextMusicAlbum,
+			)
+		);
+	}
+	
+	public function currentSongAction(Request $request)
+	{
+		$streamId = $request->attributes->get('stream_id');
+		
+		$now = new \DateTime();
+		$currentRecordQuery = $this->getDoctrine()
+								   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+								   ->createQueryBuilder('record')
+								   ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+								   ->andWhere("record.stream = " . $streamId)
+								   ->orderBy('record.played', 'DESC')
+								   ->getQuery();
+		$currentRecordResult = $currentRecordQuery->getResult();
+		$currentRecord = null;
+		
+		if (count($currentRecordResult))
+		{
+			$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
+			
+			if ($lastEndTime > $now->getTimestamp())
+			{
+				$result = $currentRecordResult[0];
+				return new Response(
+					json_encode(
+						array(
+							'record' => array(
+								'name' => $result->getMusic()->getTitle(),
+								'artist' => $result->getMusic()->getAlbum()->getArtiste()->getName(),
+								'album' => $result->getMusic()->getAlbum()->getTitle()
+							)
+						)
+					)
+				);
+			}
+		}
+		return new Response(
+			json_encode(
+				array(
+					'record' => null
+				)
+			)
+		);
+	}
+	
+	public function stopAction(Request $request)
+	{
+		$session = $this->get('session');
+		$session->set('playing_stream', null);
+		$session->set('show_player', false);
+		
+		return new Response(
+			json_encode(array('' => ''))
+		);
+	}
+	
+	public function playAction(Request $request)
+	{
+		$streamId = $request->attributes->get('stream_id');
+		
+		if (!Authentication::isAuthenticated($request))
+			return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
+		
+		$session = $this->get('session');
+		
+		$data = json_decode($this->getRequest()->getContent(), true);
+		
+		$now = new \DateTime();
+		$currentRecordQuery = $this->getDoctrine()
+								   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+								   ->createQueryBuilder('record')
+								   ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+								   ->andWhere("record.stream = " . $streamId)
+								   ->orderBy('record.played', 'DESC')
+								   ->getQuery();
+		$currentRecordResult = $currentRecordQuery->getResult();
+		$currentRecord = null;
+		
+		if (count($currentRecordResult))
+		{
+			$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
+			if ($lastEndTime > $now->getTimestamp())
+			{
+				$currentRecord = $currentRecordResult[0];
+
+				// Logs in Database
+				if ($session->get('show_player') == false)
+				{
+					$user = $this->getDoctrine()
+								 ->getRepository('MTIMusicAndMeBundle:User')
+								 ->findOneById($session->get('user_id'));
+					$stream = $this->getDoctrine()
+								   ->getRepository('MTIMusicAndMeBundle:Stream')
+								   ->findOneById($streamId);
+				
+					$playedStream = new PlayedStream();
+					$playedStream->setUser($user);
+					$playedStream->setStream($stream);
+					$em = $this->getDoctrine()->getEntityManager();
+					$em->persist($playedStream);
+					$em->flush();
+				}
+				
+				$session->set('show_player', true);
+				$session->set('playing_stream', $streamId);
+				
+				
+				return new Response(
+					json_encode(
+						array(
+							'stop' => false,
+							'path' => $currentRecord->getMusic()->getWebPath(),
+							'time' => $now->getTimestamp() - $currentRecord->getPlayed()->getTimestamp()
+						)
+					)
+				);
+			}
+		}
+		
+		$session->set('playing_stream', null);
+		$session->set('show_player', false);
+		return new Response(
+			json_encode(
+				array(
+					'stop' => true
+				)
 			)
 		);
 	}
@@ -290,6 +420,7 @@ class StreamController extends Controller
 					  ->createQueryBuilder('record')
 					  ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
 					  ->andWhere("record.played > '" . $endMusic->format('Y-m-d H:i:s') . "'")
+					  ->andWhere("record.stream = " . $stream->getId())
 					  ->getQuery();
 		
 		$records = $query->getResult();

@@ -1,8 +1,15 @@
-<footer class="gray-gradient">
-	<div>
-		<div class="progress">
-			<audio></audio>
-			<div class="bar" style="width: 25%;"></span>
+<div {% if app.session.get('show_player') == false %}style="display:none;"{% endif %} class="navbar navbar-fixed-bottom">
+	{% if app.session.get('show_player') %}<span id="show-player" style="display: none;"></span>{% endif %}
+	<div id="player" class="navbar-inner">
+		<div class="row-fluid">
+			<span style="display:none;">plop</span>
+			<audio id="player-object">
+			</audio>
+			<div style="height: 18px; margin: 10px; display: inline-block; float: left;" class="btn" data-placement="bottom" rel="popover" data-original-title="Arrêter la lecture"><i class="icon-stop icon-black"></i></div>
+			<div style="height: 28px;" class="progress">
+				<div style="height: 28px;" class="bar"
+				style="width: 0%;"></div>
+			</div>
 		</div>
 	</div>
-</footer>
+</div>
