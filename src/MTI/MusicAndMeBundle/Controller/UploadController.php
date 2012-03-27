@@ -47,6 +47,10 @@ class UploadController extends Controller
 			{
 				$this->saveZik($zik, true);
 			}
+			else {
+			    $err[] = "Ce n'est pas un fichier de type zip ou mp3";
+			}
+			
 		}
 
 	return $this->render(
