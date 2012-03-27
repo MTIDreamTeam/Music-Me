@@ -104,7 +104,10 @@ class StreamController extends Controller
 				return $this->render(
 					'MTIMusicAndMeBundle:Stream:create.html.twig',
 					array(
-						'form' => $form->createView()
+						'form' => $form->createView(),
+						'is_connected' => $user == null ? false : true,
+						'user_name' => $userName,
+						'create_stream_error' => null,
 					)
 				);
 			}
@@ -132,6 +135,8 @@ class StreamController extends Controller
 						array(
 							'form' => $form->createView(),
 							'create_stream_error' => 'Un flux "' . $form->getData()->getName() . '" existe déjà',
+							'is_connected' => $user == null ? false : true,
+							'user_name' => $userName,
 						)
 					);
 				}
@@ -149,6 +154,7 @@ class StreamController extends Controller
 					'is_connected' => $user == null ? false : true,
 					'user_name' => $userName,
 					'form' => $form->createView(),
+					'create_stream_error' => null,
 				)
 			);
 		}
@@ -160,6 +166,7 @@ class StreamController extends Controller
 					'is_connected' => $user == null ? false : true,
 					'user_name' => $userName,
 					'form' => $form->createView(),
+					'create_stream_error' => null,
 				)
 			);
 		}

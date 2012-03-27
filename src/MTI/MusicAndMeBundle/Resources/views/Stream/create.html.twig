@@ -27,6 +27,11 @@
 								{% if form_errors(form.name) %}{{ form_errors(form.name) }}{% endif %}
 							</div>
 						</div>
+						{% if create_stream_error %}
+						<div>
+							{{ create_stream_error }}
+						</div>
+						{% endif %}
 						<div class="form-actions">
 							<button type="submit" class="btn btn-primary">Créer un nouveau flux</button>
 						</div>
