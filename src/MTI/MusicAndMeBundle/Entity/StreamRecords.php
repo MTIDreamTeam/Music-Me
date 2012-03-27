@@ -48,7 +48,7 @@ class StreamRecords
 	 */
 	public function onPrePersist()
 	{
-	    $this->played = new \DateTime();
+	    // $this->played = new \DateTime();
 	}
 
 	public function isPlaying()

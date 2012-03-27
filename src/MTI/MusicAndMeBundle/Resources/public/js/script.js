@@ -81,9 +81,9 @@ jQuery(document).ready(function($) {
 	}
 
 	// pre fetched UI elements
-	var voteButtons = $('#stream-musics td div.btn:has(i.icon-arrow-up), #search-zik td div.btn:has(i.icon-plus)');
+	var voteButtons = $('#stream-musics td div.btn:has(i.icon-arrow-up), #search-zik td div.btn:has(i.icon-play)');
 	var playButton = $('#stream-musics td div.btn:has(i.icon-play)');
-	var streamButton = $('#search-flux td div.btn:has(i.icon-play)');
+	var streamButton = $('#search-flux td div.btn:has(i.icon-zoom-in)');
 	var stopButton = $('#stream-musics td div.btn:has(i.icon-stop), #stop-in-player');
 
 	$('.tip').mouseover(function() {
@@ -207,6 +207,7 @@ jQuery(document).ready(function($) {
 		var voteContent = {};
 		voteContent['stream'] = parseInt($('#stream-id').html());
 		voteContent['music'] = parseInt(cell.siblings('.music-id').html());
+		voteContent['record'] = parseInt(cell.siblings('.record-id').html());
 		console.log(voteContent['music']);
 
 		$.ajax({

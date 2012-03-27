@@ -277,11 +277,19 @@ div.spinner div.bar12 {
 	background-image:      -o-linear-gradient(top, #fff, #f5f5f5);
 }
 
-#stream-musics td, #stream-musics th {
+#stream-musics td, #stream-musics th, {
+	vertical-align: middle;
+}
+
+#search-flux td, #search-flux th {
 	vertical-align: middle;
 }
 
 #stream-musics td:last-child, #stream-musics th:last-child {
+	text-align: right !important;
+}
+
+#search-flux td:last-child, #search-flux th:last-child {
 	text-align: right !important;
 }
 

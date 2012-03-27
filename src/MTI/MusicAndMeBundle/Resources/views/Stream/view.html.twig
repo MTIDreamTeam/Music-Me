@@ -50,6 +50,7 @@
 				{% for i in range(0, records_count - 1) %}
 				<tr>
 					<td class="music-id" style="display: none;">{{ next_records[i].music.id }}</td>
+					<td class="record-id" style="display: none;">{{ next_records[i].getId() }}</td>
 					<td>
 						<img class="thumbnail" src="{{ next_records[i].music.album.getCoverPath() }}" alt="">
 					</td>

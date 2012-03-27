@@ -174,27 +174,33 @@ class StreamController extends Controller
 		$nextMusicAlbum = array();
 		$nextMusicCover = array();
 		
-		for ($i = 0; $i < $recordsCount; $i++)
+		foreach ($nextRecords as $nextRecord)
 		{
-			$nextRecordsHasVoted[$i] = false;
+			$nextRecordsHasVoted[] = false;
 			
-			$music = $nextRecords[$i]->getMusic();
-			$album = $nextRecords[$i]->getMusic()->getAlbum();
-			$votes = $nextRecords[$i]->getVotes();
-			// var_dump($nextRecords[$i]->getVotes()->getId());
+			$music = $nextRecord->getMusic();
+			$album = $nextRecord->getMusic()->getAlbum();
+			// $votes = $nextRecord->getVotes();
+			$votes = $this->getDoctrine()
+						  ->getRepository('MTIMusicAndMeBundle:Vote')
+						  ->findByStreamRecord($nextRecord->getId());
+			// foreach($nextRecord->getVotes() as $v)
+			// {
+			// 	echo $v->getId() . '<br/';
+			// }
 			// die();
-			
-			$nextRecordsVotes[$i] = count($votes);
-			$nextMusicId[$i] = $music->getId();
-			$nextMusicTitle[$i] = $music->getTitle();
-			$nextMusicArtist[$i] = $album->getArtiste()->getName();
-			$nextMusicAlbum[$i] = $album->getTitle();
+			// var_dump(count($votes));die();
+			$nextRecordsVotes[] = count($votes);
+			$nextMusicId[] = $music->getId();
+			$nextMusicTitle[] = $music->getTitle();
+			$nextMusicArtist[] = $album->getArtiste()->getName();
+			$nextMusicAlbum[] = $album->getTitle();
 			
 			foreach ($votes as $vote)
 			{
 				if ($vote->getUser()->getId() == $user->getId())
 				{
-					$nextRecordsHasVoted[$i] = true;
+					$nextRecordsHasVoted[] = true;
 					break;
 				}
 			}
@@ -369,6 +375,97 @@ class StreamController extends Controller
 		);
 	}
 	
+	private function getCurrentMusic($stream)
+	{
+		$record = $this->getCurrentRecord($stream);
+		if ($record)
+			return $record->getMusic();
+		return null;
+	}
+	
+	private function getCurrentRecord($stream)
+	{
+		$now = new \DateTime();
+		$currentRecordQuery = $this->getDoctrine()
+								   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+								   ->createQueryBuilder('record')
+								   ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+								   ->andWhere("record.stream = " . $stream->getId())
+								   ->orderBy('record.played', 'DESC')
+								   ->getQuery();
+		$currentRecordResult = $currentRecordQuery->getResult();
+		$currentRecord = null;
+		var_dump($currentRecordResult);die();
+		if (count($currentRecordResult))
+		{
+			$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
+			
+			if ($lastEndTime > $now->getTimestamp())
+				return $currentRecordResult[0];
+		}
+		
+		return null;
+	}
+	
+	private function reorderStreamRecords(StreamRecord $streamRecord)
+	{
+		$currentRecord = $this->getCurrentRecord($streamRecord);
+		$currentMusic = $currentRecord->getMusic();
+		
+		$now = new \DateTime();
+		$endMusic = new \DateTime();
+		$endMusic->setTimestamp($currentRecord->getPlayed()->getTimestamp() - $currentMusic->getDuree());
+		
+		$query = $this->getDoctrine()
+					  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+					  ->createQueryBuilder('record')
+					  ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+					  ->andWhere("record.played >= '" . $endMusic->format('Y-m-d H:i:s') . "'")
+					  ->andWhere("record.stream = " . $streamRecord->getStream()->getId())
+					  ->orderBy("record.played", "ASC")
+					  ->getQuery();
+		
+		// Gets the records between the one played and the one voted
+		$records = $query->getResult();
+		$recordsCount = count($records);
+		$foundInversion = false;
+		
+		// Prepares an Entity Manager if we need to update values in the Database
+		$em = $this->getDoctrine()->getEntityManager();
+		
+		for ($i = 0; $i < $recordsCount; $i++)
+		{
+			if ($foundInversion)
+			{
+				$newDate = new \DateTime();
+				$newDate->setTimestamp($records[$i - 1]->getPlayed()->getTimestamp() + $records[$i - 1]->getMusic()->getDuree());
+				$records[$i]->setPlayed($newDate);
+				$em->persist($records[$i]);
+			}
+			else
+			{
+				if ($i < $recordsCount)
+				{
+					$betterRankedRecord = $records[$i + 1];
+					if (count($betterRankedRecord.getVotes()) < count($streamRecord.getVotes()))
+					{
+						$foundInversion = true;
+						// Sets a more recent date to the promoted song
+						$streamRecord->setPlayed($betterRankedRecord->getPlayed());
+						$em->persist($streamRecord);
+					}
+				}
+			}
+		}
+		
+		if ($foundInversion)
+		{
+			$em->flush();
+			return true;
+		}
+		return false;
+	}
+	
 	public function voteAction(Request $request)
 	{
 		$session = $this->get('session');
@@ -381,7 +478,7 @@ class StreamController extends Controller
 		$stream = $this->getDoctrine()
 					   ->getRepository('MTIMusicAndMeBundle:Stream')
 					   ->findOneById($data['stream']);
-
+		
 		if ($music == null)
 		{
 			return new Response(
@@ -411,28 +508,16 @@ class StreamController extends Controller
 			);
 		}
 		
-		$now = new \DateTime();
-		$endMusic = new \DateTime();
-		$endMusic->setTimestamp($now->getTimestamp() - $music->getDuree());
-		
-		$query = $this->getDoctrine()
-					  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
-					  ->createQueryBuilder('record')
-					  ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
-					  ->andWhere("record.played > '" . $endMusic->format('Y-m-d H:i:s') . "'")
-					  ->andWhere("record.stream = " . $stream->getId())
-					  ->getQuery();
-		
-		$records = $query->getResult();
-		
 		$user = $this->getDoctrine()
 					 ->getRepository('MTIMusicAndMeBundle:User')
 					 ->find($session->get('user_id'));
 		
-		// There is a song being played
-		if (count($records))
+		// If the request sent the record id (i.e. the song was voted from the stream view)
+		if ($data['record'])
 		{
-			$streamRecord = $records[0];
+			$streamRecord = $this->getDoctrine()
+								 ->getRepository('MTIMusicAndMeBundle:Stream')
+								 ->findOneById($data['record']);
 			
 			$vote = new Vote();
 			$vote->setUser($user);
@@ -442,30 +527,7 @@ class StreamController extends Controller
 			$em->persist($vote);
 			$em->flush();
 			
-			$query = $this->getDoctrine()
-						  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
-						  ->createQueryBuilder('record')
-						  ->where("record.played > '" . $streamRecord->getPlayed()->format('Y-m-d H:i:s') . "'")
-						  ->orderBy('record.played', 'ASC')
-						  ->getQuery();
-			$nextRecords = $query->getResult();
-		}
-		// No song is being played, play this one !
-		else
-		{
-			$streamRecord = new StreamRecords();
-			$streamRecord->setStream($stream);
-			$streamRecord->setMusic($music);
-			
-			$vote = new Vote();
-			$vote->setUser($user);
-			$vote->setStreamRecord($streamRecord);
-			
-			$em = $this->getDoctrine()->getEntityManager();
-			$em->persist($streamRecord);
-			$em->flush();
-			$em->persist($vote);
-			$em->flush();
+			$this->reorderStreamRecords($streamRecord);
 			
 			return new Response(
 				json_encode(
@@ -478,6 +540,171 @@ class StreamController extends Controller
 					)
 				)
 			);
+		}
+		// We need to know if we have to create a new stream record or find the existing one
+		else
+		{
+			$currentRecord = $this->getCurrentRecord($stream);
+			
+			// There is a song playing
+			if ($currentRecord)
+			{
+				$now = new \DateTime();
+				
+				$query = $this->getDoctrine()
+							  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+							  ->createQueryBuilder('record')
+							  ->where("record.played < '" . $currentRecord->getPlayed()->format('Y-m-d H:i:s') . "'")
+							  ->andWhere("record.played >= '" . $now->format('Y-m-d H:i:s') . "'")
+							  ->andWhere("record.stream = " . $stream->getId())
+							  ->orderBy("record.played", "ASC")
+							  ->getQuery();
+				$upcompingStreams = $query->getResult();
+			
+				// There are upcoming Stream Records
+				if (count($upcompingStreams))
+				{
+					$foundStreamRecordInUpcomings = false;
+					foreach ($upcompingStreams as $upcompingStream)
+					{
+						if ($upcompingStream->getMusic()->getId() == $music->getId())
+						{
+							$foundStreamRecordInUpcomings = true;
+						
+							// Creates Vote with the stream found
+							$vote = new Vote();
+							$vote->setUser($user);
+							$vote->setStreamRecord($upcompingStream);
+						
+							// Save the vote in DB
+							$em->persist($vote);
+							$em->flush();
+						
+							break;
+						}
+					}
+					
+					// The voted record is in the upcomings
+					if ($foundStreamRecordInUpcomings)
+					{
+						return new Response(
+							json_encode(
+								array(
+									'alert' => array(
+										'type' => 'success',
+										'title' => 'Le vote a bien été pris en compte',
+										'message' => 'Vous avez voté pour le morceau '.$music->getTitle(),
+									)
+								)
+							)
+						);
+					}
+					// The voted record is not in the upcomings
+					else
+					{
+						// We create an new Record after all the existing ones
+						$newRecord = new StreamRecords();
+						$newRecord->setStream($stream);
+						$newRecord->setMusic($music);
+					
+						$lastStreamRecord = $upcompingStreams[count($upcompingStreams) - 1];
+				
+						$timeToPlay = new \DateTime();
+						$timeToPlay->setTimestamp($lastStreamRecord->getPlayed()->getTimestamp() + $lastStreamRecord->getMusic()->getDuree());
+						$newRecord->setPlayed($timeToPlay);
+				
+						// Create a new vote with that record
+						$vote = new Vote();
+						$vote->setUser($user);
+						$vote->setStreamRecord($newRecord);
+				
+						$em = $this->getDoctrine()->getEntityManager();
+						$em->persist($newRecord);
+						$em->persist($vote);
+						$em->flush();
+					
+						return new Response(
+							json_encode(
+								array(
+									'alert' => array(
+										'type' => 'success',
+										'title' => 'Le vote a bien été pris en compte',
+										'message' => 'Vous avez voté pour le morceau '.$music->getTitle(),
+									)
+								)
+							)
+						);
+					}
+				}
+				// There is no upcomming StreamRecord
+				else
+				{
+					// CREATE A NEW RECORD after the currently playing songs
+					$newRecord = new StreamRecords();
+					$newRecord->setStream($stream);
+					$newRecord->setMusic($music);
+				
+					$timeToPlay = new \DateTime();
+					$timeToPlay->setTimestamp($currentRecord->getPlayed()->getTimestamp() + $currentRecord->getMusic()->getDuree());
+					$newRecord->setPlayed($timeToPlay);
+				
+					// Create a new vote with that record
+					$vote = new Vote();
+					$vote->setUser($user);
+					$vote->setStreamRecord($newRecord);
+				
+					$em = $this->getDoctrine()->getEntityManager();
+					$em->persist($newRecord);
+					$em->persist($vote);
+					$em->flush();
+				
+					return new Response(
+						json_encode(
+							array(
+								'alert' => array(
+									'type' => 'success',
+									'title' => 'Le vote a bien été pris en compte',
+									'message' => 'Vous avez voté pour le morceau '.$music->getTitle(),
+								)
+							)
+						)
+					);
+				}
+			}
+			else
+			{
+				$now = new \DateTime();
+				
+				// CREATE A NEW RECORD which will start playing immeditately
+				$newRecord = new StreamRecords();
+				$newRecord->setStream($stream);
+				$newRecord->setMusic($music);
+				
+				// Sets the time to play to now
+				$newRecord->setPlayed($now);
+				
+				// Create a new vote with that record
+				$vote = new Vote();
+				$vote->setUser($user);
+				$vote->setStreamRecord($newRecord);
+				
+				$em = $this->getDoctrine()->getEntityManager();
+				$em->persist($newRecord);
+				$em->persist($vote);
+				$em->flush();
+				
+				return new Response(
+					json_encode(
+						array(
+							'alert' => array(
+								'type' => 'success',
+								'title' => 'Le vote a bien été pris en compte',
+								'message' => 'Vous avez voté pour le morceau '.$music->getTitle(),
+							)
+						)
+					)
+				);
+			}
 		}
 	}
 }
