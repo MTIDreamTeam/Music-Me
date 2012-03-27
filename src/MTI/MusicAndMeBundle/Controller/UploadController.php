@@ -21,7 +21,6 @@ class UploadController extends Controller
       if (!Authentication::isAuthenticated($request))
 	return $this->redirect($this->generateUrl('MTIMusicAndMeBundle_login'));
 
-      
       $session = $this->get('session');
       
       $user = $this->getDoctrine()
@@ -46,15 +45,14 @@ class UploadController extends Controller
 		$this->saveZik($zik, true);
 	    }   
       }
-
-      return $this->render(
-	'MTIMusicAndMeBundle:Upload:index.html.twig',
-	array(
-	  'is_connected' => $user == null ? false : true,
-	  'user_name' => $userName,
-	  'form' => $form->createView(),
-	)
-      );
+	return $this->render(
+		'MTIMusicAndMeBundle:Upload:index.html.twig',
+		array(
+		'is_connected' => $user == null ? false : true,
+		'user_name' => $userName,
+		'form' => $form->createView(),
+		)
+	);
     }
 
     public function parseZip($file, $loc)

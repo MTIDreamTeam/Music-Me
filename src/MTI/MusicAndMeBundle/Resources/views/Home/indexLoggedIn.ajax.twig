@@ -32,3 +32,38 @@
 		</div>
 	</div>
 </section>
+<section id="last-played">
+	<div class="page-header">
+		<h1>Mes dernières lectures de flux</h1>
+	</div>
+	<div class="row">
+		<div class="span12">
+			<ul class="thumbnails">
+				<li class="span2">
+					<div class="thumbnail create-stream tip" data-placement="bottom" rel="popover" data-original-title="Créer un nouveau flux">
+						<a href="{{ path('MTIMusicAndMeBundle_streamCreate') }}"><img src="/images/add.png" alt="" /></a>
+					</div>
+				</li>
+				{% for i, log in last_played %}
+				<li class="span2">
+					<div class="thumbnail actual-stream">
+						<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ log.getStream().getId() }}"><img src="{% if last_played_current_songs[i] == null %}/images/cover.jpg{% else %}{{ last_played_current_songs[i].getMusic().getAlbum().getCoverPath() }}{% endif %}" alt="" /></a>
+						<div class="caption">
+							<h5>{{ log.getStream().getName() }}</h5>
+							<p style="display: none;" class="stream-id">{{ log.getStream().getId() }}</p>
+							{% if last_played_current_songs[i] == null %}
+							<p class="music-name">Aucune lecture en cours</p>
+							{% else %}
+							<p class="music-played">Le {{ log.getCreated().format('d-m-Y') }} à {{ log.getCreated().format('H:i') }}</p>
+							<p class="music-name">{{ last_played_current_songs[i].getMusic().getTitle() }}</p>
+							<p class="music-artist">{{ last_played_current_songs[i].getMusic().getAlbum().getArtiste().getName() }}</p>
+							<p class="music-album">{{ last_played_current_songs[i].getMusic().getAlbum().getTitle() }}</p>
+							{% endif %}
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</section>

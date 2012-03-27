@@ -124,34 +124,6 @@ jQuery(document).ready(function($) {
 			}
 		});
 	}
-	
-	var myStreams = $('#my-streams .actual-stream');
-	if (myStreams.length)
-	{
-		myStreams.each(function(stream) {
-			var stream = stream;
-			$.ajax({
-				type: 'POST',
-				url: '/stream/' + $(this).find('.stream-id').text() + '/current/',
-				dataType: 'json',
-				data: $.toJSON({}),
-				success: function(data) {
-					console.log('success : ' + data['record']);
-					if (data['record'])
-					{
-						console.log('success : ' + data['record']['name']);
-						console.log('object' + stream);
-						$(this).find('.music-name').html(data['record']['name']);
-						$(this).find('.music-artist').html(data['record']['artist']);
-						$(this).find('.music-album').html(data['record']['album']);
-					}
-				},
-				error: function(data) {
-					console.log('error while loading stream infos');
-				}
-			});
-		});
-	}
 
 	playButton.click(function() {
 		
