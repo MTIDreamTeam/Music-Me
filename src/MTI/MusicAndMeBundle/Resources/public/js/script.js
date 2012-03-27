@@ -6,12 +6,12 @@ var validated = '<div class="btn btn-success disabled"><i class="icon-ok icon-wh
 var error = '<div class="btn btn-danger disabled"><i class="icon-remove icon-white"></i></div>';
 
 jQuery(document).ready(function($) {
-	
+
 	var errorAlert = $('#error-alert');
 	var infoAlert = $('#info-alert');
 	var warningAlert = $('#warning-alert');
 	var successAlert = $('#success-alert');
-	
+
 	var closeAlertButton = $('div.alert > a.close').click(function() {
 		$(this).parent().fadeOut();
 	});
@@ -68,7 +68,7 @@ jQuery(document).ready(function($) {
 		cell.append(validated);
 		showSuccess(data['alert']['title'], data['alert']['message']);
 	}
-	
+
 	function updateProgessBar()
 	{
 		var audio = $("audio").get(0);
@@ -84,16 +84,16 @@ jQuery(document).ready(function($) {
 	var voteButtons = $('#stream-musics td div.btn:has(i.icon-arrow-up), #search-zik td div.btn:has(i.icon-plus)');
 	var playButton = $('#stream-musics td div.btn:has(i.icon-play)');
 	var stopButton = $('#stream-musics td div.btn:has(i.icon-stop), #stop-in-player');
-	
+
 	$('.tip').mouseover(function() {
 		$(this).tooltip('show');
 	});
-	
+
 	if ($('#show-player').length)
 	{
 		var playContent = {};
 		playContent['stream'] = parseInt($('#playing-stream').text());
-		
+
 		$.ajax({
 			type: 'POST',
 			url: '/stream/'+playContent['stream']+'/play/',
@@ -124,7 +124,7 @@ jQuery(document).ready(function($) {
 			}
 		});
 	}
-	
+
 	var myStreams = $('#my-streams .actual-stream');
 	if (myStreams.length)
 	{
@@ -154,16 +154,16 @@ jQuery(document).ready(function($) {
 	}
 
 	playButton.click(function() {
-		
+
 		var button = $(this);
 		var cell = button.parent();
 		button.tooltip('hide');
 		button.hide();
 		var spinner = cell.append(spinnerPlay);
-		
+
 		var playContent = {};
 		playContent['stream'] = parseInt($('#stream-id').html());
-		
+
 		$.ajax({
 			type: 'POST',
 			url: '/stream/'+playContent['stream']+'/play/',
@@ -180,7 +180,7 @@ jQuery(document).ready(function($) {
 					$("audio").bind('playing', function(){
 					   this.currentTime = data['time'];
 					});
-					
+
 					$('#player').parent().fadeIn();
 					$('#stream-musics td div.btn:has(i.icon-stop)').show();
 				}
@@ -192,17 +192,17 @@ jQuery(document).ready(function($) {
 			}
 		});
 	});
-	
+
 	stopButton.click(function() {
 		var button = $(this);
 		var cell = button.parent();
 		button.tooltip('hide');
 		button.hide();
 		var spinner = cell.append(spinnerPlay);
-		
+
 		var playContent = {};
 		playContent['stream'] = parseInt($('#stream-id').html());
-		
+
 		$.ajax({
 			type: 'POST',
 			url: '/stream/'+playContent['stream']+'/stop/',
@@ -223,20 +223,20 @@ jQuery(document).ready(function($) {
 			}
 		});
 	})
-	
+
 	voteButtons.click(function() {
-		
+
 		var button = $(this);
 		var cell = button.parent();
 		button.tooltip('hide');
 		button.hide();
 		cell.append(spinner);
-		
+
 		var voteContent = {};
 		voteContent['stream'] = parseInt($('#stream-id').html());
 		voteContent['music'] = parseInt(cell.siblings('.music-id').html());
 		console.log(voteContent['music']);
-		
+
 		$.ajax({
 			type: 'POST',
 			url: '/stream/vote/',
@@ -260,8 +260,8 @@ jQuery(document).ready(function($) {
 			}
 		});
 	});
-});	
 
+});
 function callAjax(data, url)
 {
 	$.ajax({

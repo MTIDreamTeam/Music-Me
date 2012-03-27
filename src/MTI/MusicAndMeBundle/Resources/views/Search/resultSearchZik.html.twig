@@ -6,14 +6,16 @@
     <a href="{{ path('MTIMusicAndMeBundle_homepage') }}">Music &amp; Me</a> <span class="divider">/</span>
   </li>
   <li>
-    <a href="{{ path('MTIMusicAndMeBundle_searchZik', {'stream_id': stream_id }) }}">Recherche de musique</a> <span class="divider">/</span>
+    <a href="{{ path('MTIMusicAndMeBundle_streamView', {'stream_id': stream.id }) }}">{{ stream.name }}</a> <span class="divider">/</span>
   </li>
   <li class="active">{{ toSearch }}</li>
 </ul>
 	<section id="search-zik">
-		<div id="stream-id" style="display: none;">{{ stream_id }}</div>
+		<div id="stream-id" style="display: none;">{{ stream.id }}</div>
 		<div>
-			<h3>&ensp;</h3>
+			<form class="form-horizontal" action="" method="post">
+				<input type="text" class="search-query span2" placeholder="Rechercher une musique" name="searchZik">
+			</form>
 		</div>
 		<table class="table">
 			<thead>
