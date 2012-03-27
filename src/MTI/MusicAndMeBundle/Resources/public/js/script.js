@@ -156,6 +156,7 @@ jQuery(document).ready(function($) {
 
 					$('#player').parent().fadeIn();
 					$('#stream-musics td div.btn:has(i.icon-stop)').show();
+					updateProgessBar();
 				}
 			},
 			error: function(data) {
