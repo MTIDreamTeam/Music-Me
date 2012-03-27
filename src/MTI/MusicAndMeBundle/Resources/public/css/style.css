@@ -329,6 +329,14 @@ div.spinner div.bar12 {
 	width:35px;
 	height:35px;
 }
+#search-flux img{
+	width:35px;
+	height:35px;
+}
+#my-streams img{
+	width:170px;
+	height:170px;
+}
 /* @end */
 
 /* @group Alerts */
