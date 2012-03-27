@@ -67,7 +67,7 @@ class HomeController extends Controller
 										   ->orderBy('record.played', 'DESC')
 										   ->getQuery();
 				$currentRecordResult = $currentRecordQuery->getResult();
-				// var_dump(count($currentRecordResult));die();
+				
 				if (count($currentRecordResult))
 				{
 					$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
@@ -80,10 +80,36 @@ class HomeController extends Controller
 				$lastPlayedCurrentSongs[] = null;
 			}
 			
+			$myStreamsCurrentSongs = array();
+			$now = new \DateTime();
+			foreach ($streams as $stream)
+			{
+				$currentRecordQuery = $this->getDoctrine()
+										   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+										   ->createQueryBuilder('record')
+										   ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+										   ->andWhere("record.stream = " . $stream->getId())
+										   ->orderBy('record.played', 'DESC')
+										   ->getQuery();
+				$currentRecordResult = $currentRecordQuery->getResult();
+				
+				if (count($currentRecordResult))
+				{
+					$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
+					if ($lastEndTime > $now->getTimestamp())
+					{
+						$myStreamsCurrentSongs[] = $currentRecordResult[0];
+						continue;
+					}
+				}
+				$myStreamsCurrentSongs[] = null;
+			}
+			
 			return $this->render('MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig', array(
 				'is_connected' => $user == null ? false : true,
 				'user_name' => $userName,
 				'my_streams' => $streams,
+				'my_streams_current_songs' => $myStreamsCurrentSongs,
 				'last_played' => $lastPlayedResults,
 				'last_played_current_songs' => $lastPlayedCurrentSongs,
 			));

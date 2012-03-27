@@ -14,16 +14,20 @@
 						<a href="{{ path('MTIMusicAndMeBundle_streamCreate') }}"><img src="/images/add.png" alt="" /></a>
 					</div>
 				</li>
-				{% for stream in my_streams %}
+				{% for i, stream in my_streams %}
 				<li class="span2">
 					<div class="thumbnail actual-stream">
-						<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ stream.id }}"><img src="/images/cover.jpg" alt="" /></a>
+						<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ stream.id }}"><img src="{% if my_streams_current_songs[i] == null %}/images/cover.jpg{% else %}{{ my_streams_current_songs[i].getMusic().getAlbum().getCoverPath() }}{% endif %}" alt="" /></a>
 						<div class="caption">
 							<h5>{{ stream.name }}</h5>
 							<p style="display: none;" class="stream-id">{{ stream.id }}</p>
+							{% if my_streams_current_songs[i] == null %}
 							<p class="music-name">Aucune lecture en cours</p>
-							<p class="music-artist"></p>
-							<p class="music-album"></p>
+							{% else %}
+							<p class="music-name">{{ my_streams_current_songs[i].getMusic().getTitle() }}</p>
+							<p class="music-artist">{{ my_streams_current_songs[i].getMusic().getAlbum().getArtiste().getName() }}</p>
+							<p class="music-album">{{ my_streams_current_songs[i].getMusic().getAlbum().getTitle() }}</p>
+							{% endif %}
 						</div>
 					</div>
 				</li>
