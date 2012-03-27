@@ -338,3 +338,14 @@ div.spinner div.bar12 {
 
 
 /* @end */
+
+/* @group Images */
+
+table img.thumbnail {
+	width: 40px;
+	height: 40px;
+}
+
+
+
+/* @end */

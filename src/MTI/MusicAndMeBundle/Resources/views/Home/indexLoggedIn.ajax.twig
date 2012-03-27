@@ -24,9 +24,7 @@
 							{% if my_streams_current_songs[i] == null %}
 							<p class="music-name">Aucune lecture en cours</p>
 							{% else %}
-							<p class="music-name">{{ my_streams_current_songs[i].getMusic().getTitle() }}</p>
-							<p class="music-artist">{{ my_streams_current_songs[i].getMusic().getAlbum().getArtiste().getName() }}</p>
-							<p class="music-album">{{ my_streams_current_songs[i].getMusic().getAlbum().getTitle() }}</p>
+							<p class="music-name">{{ my_streams_current_songs[i].getMusic().getTitle() }} - {{ my_streams_current_songs[i].getMusic().getAlbum().getArtiste().getName() }}</p>
 							{% endif %}
 						</div>
 					</div>
@@ -58,10 +56,10 @@
 							{% if last_played_current_songs[i] == null %}
 							<p class="music-name">Aucune lecture en cours</p>
 							{% else %}
-							<p class="music-played">Le {{ log.getCreated().format('d-m-Y') }} à {{ log.getCreated().format('H:i') }}</p>
-							<p class="music-name">{{ last_played_current_songs[i].getMusic().getTitle() }}</p>
+							<p class="music-played">Le {{ log.getCreated().format('d/m/Y') }} à {{ log.getCreated().format('H:i') }}</p>
+							<!-- <p class="music-name">{{ last_played_current_songs[i].getMusic().getTitle() }}</p>
 							<p class="music-artist">{{ last_played_current_songs[i].getMusic().getAlbum().getArtiste().getName() }}</p>
-							<p class="music-album">{{ last_played_current_songs[i].getMusic().getAlbum().getTitle() }}</p>
+							<p class="music-album">{{ last_played_current_songs[i].getMusic().getAlbum().getTitle() }}</p> -->
 							{% endif %}
 						</div>
 					</div>

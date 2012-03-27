@@ -53,7 +53,7 @@ class Album
 	    return;
 	}
 	$children = $xml->children()->children();
-	return $children->image[0];
+	return $children->image[3];
       }
   }
     
