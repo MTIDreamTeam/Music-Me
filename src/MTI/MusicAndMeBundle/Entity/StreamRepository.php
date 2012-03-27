@@ -20,6 +20,7 @@ class StreamRepository extends EntityRepository
 		OR LOWER(o.firstname) LIKE :search
 		OR LOWER(o.lastname) LIKE :search');
 		$query->setParameter('search', '%'.strtolower($toSearch).'%');
+
 		return $query->getResult();
 	}
 }
