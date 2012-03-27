@@ -262,6 +262,7 @@ jQuery(document).ready(function($) {
 	});
 
 });
+
 function callAjax(data, url)
 {
 	$.ajax({

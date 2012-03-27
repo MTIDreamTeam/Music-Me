@@ -1,5 +1,5 @@
-<form class="navbar-search pull-left" id="search-flux-form" action="{{ path('MTIMusicAndMeBundle_search') }}" method="POST">
-	<input type="text" class="search-query span2" placeholder="Rechercher un flux" name="searchFlux" id="searchFluxIn">
+<form class="navbar-search pull-left" action="{{ path('MTIMusicAndMeBundle_search') }}" method="POST">
+	<input type="text" class="search-query span2" placeholder="Rechercher un flux" name="searchFlux">
 </form>
 {% if is_connected %}
 <li class="dropdown">
