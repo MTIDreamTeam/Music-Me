@@ -124,9 +124,9 @@ class HomeController extends Controller
 		{
 			$templateName = null;
 			if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-				$templateName = 'MTIMusicAndMeBundle:Home:indexLoggedIn.ajax.twig';
+				$templateName = 'MTIMusicAndMeBundle:Home:index.ajax.twig';
 			else
-				$templateName = 'MTIMusicAndMeBundle:Home:indexLoggedIn.html.twig';
+				$templateName = 'MTIMusicAndMeBundle:Home:index.html.twig';
 			
 			return $this->render($templateName, array(
 				'is_connected' => $user == null ? false : true,
