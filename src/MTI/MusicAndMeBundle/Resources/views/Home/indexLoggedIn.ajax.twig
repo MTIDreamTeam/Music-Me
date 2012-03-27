@@ -17,7 +17,7 @@
 				{% for i, stream in my_streams %}
 				<li class="span2">
 					<div class="thumbnail actual-stream">
-						<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ stream.id }}"><img src="{% if my_streams_current_songs[i] == null %}/images/cover.jpg{% else %}{{ my_streams_current_songs[i].getMusic().getAlbum().getCoverPath() }}{% endif %}" alt="" /></a>
+						<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ stream.id }}"><img src="{% if my_streams_current_songs[i] == null %}/images/placeholder.png{% else %}{{ my_streams_current_songs[i].getMusic().getAlbum().getCoverPath() }}{% endif %}" alt="" /></a>
 						<div class="caption">
 							<h5>{{ stream.name }}</h5>
 							<p style="display: none;" class="stream-id">{{ stream.id }}</p>
@@ -49,7 +49,7 @@
 				{% for i, log in last_played %}
 				<li class="span2">
 					<div class="thumbnail actual-stream">
-						<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ log.getStream().getId() }}"><img src="{% if last_played_current_songs[i] == null %}/images/cover.jpg{% else %}{{ last_played_current_songs[i].getMusic().getAlbum().getCoverPath() }}{% endif %}" alt="" /></a>
+						<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ log.getStream().getId() }}"><img src="{% if last_played_current_songs[i] == null %}/images/placeholder.png{% else %}{{ last_played_current_songs[i].getMusic().getAlbum().getCoverPath() }}{% endif %}" alt="" /></a>
 						<div class="caption">
 							<h5>{{ log.getStream().getName() }}</h5>
 							<p style="display: none;" class="stream-id">{{ log.getStream().getId() }}</p>
