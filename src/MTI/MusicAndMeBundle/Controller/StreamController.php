@@ -395,7 +395,7 @@ class StreamController extends Controller
 								   ->getQuery();
 		$currentRecordResult = $currentRecordQuery->getResult();
 		$currentRecord = null;
-		var_dump($currentRecordResult);die();
+		// var_dump($currentRecordResult);die();
 		if (count($currentRecordResult))
 		{
 			$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
