@@ -84,10 +84,44 @@ jQuery(document).ready(function($) {
 	var voteButtons = $('#stream-musics td div.btn:has(i.icon-arrow-up), #search-zik td div.btn:has(i.icon-plus)');
 	var playButton = $('#stream-musics td div.btn:has(i.icon-play)');
 	var streamButton = $('#search-flux td div.btn:has(i.icon-zoom-in)');
-	var stopButton = $('#stream-musics td div.btn:has(i.icon-stop), #stop-in-player');
+	var stopButton = $('#stream-musics td div.btn:has(i.icon-stop)');
+	var stopInPlayerButton = $('#stop-in-player');
 
 	$('.tip').mouseover(function() {
 		$(this).tooltip('show');
+	});
+	
+	$('audio').bind('ended', function() {
+		var playContent = {};
+		playContent['stream'] = parseInt($('#playing-stream').text());
+		
+		$.ajax({
+			type: 'POST',
+			url: '/stream/'+playContent['stream']+'/play/',
+			dataType: 'json',
+			data: $.toJSON(playContent),
+			success: function(data) {
+				if (data['stop'])
+				{
+					$('#player').parent().hide();
+				}
+				if (data['path'])
+				{
+					var audio = $('audio');
+					audio.attr('src', data['path']);
+					p = audio.get(0);
+					p.play();
+					$("audio").bind('playing', function(){
+						updateProgessBar();
+						this.currentTime = data['time'];
+					});
+				}
+			},
+			error: function(data) {
+				$('#player').parent().hide();
+				console.log('error showing player');
+			}
+		});
 	});
 
 	if ($('#show-player').length)
@@ -110,13 +144,11 @@ jQuery(document).ready(function($) {
 					var audio = $('audio');
 					audio.attr('src', data['path']);
 					p = audio.get(0);
-					p.play();
 					$("audio").bind('playing', function(){
 						updateProgessBar();
 						this.currentTime = data['time'];
-						// $('.progress .bar').css('width', '0%');
-						updateProgessBar();
 					});
+					p.play();
 				}
 			},
 			error: function(data) {
@@ -149,10 +181,12 @@ jQuery(document).ready(function($) {
 					var audio = $('audio');
 					audio.attr('src', data['path']);
 					p = audio.get(0);
-					p.play();
+					
 					$("audio").bind('playing', function(){
 					   this.currentTime = data['time'];
 					});
+					
+					p.play();
 
 					$('#player').parent().fadeIn();
 					$('#stream-musics td div.btn:has(i.icon-stop)').show();
@@ -187,7 +221,11 @@ jQuery(document).ready(function($) {
 				var audio = $('audio');
 				p = audio.get(0);
 				p.pause();
-				$('#stream-musics td div.btn:has(i.icon-play)').show();
+				
+				var playIcon = $('#stream-musics td div.btn:has(i.icon-play)');
+				if (playIcon.length)
+					playIcon.show();
+				
 				$('#player').parent().fadeOut();
 			},
 			error: function(data) {
@@ -197,7 +235,32 @@ jQuery(document).ready(function($) {
 			}
 		});
 	})
+	
+	stopInPlayerButton.click(function() {
+		var button = $(this);
+		
+		var playContent = {};
+		playContent['stream'] = parseInt($('#stream-id').html());
 
+		$.ajax({
+			type: 'POST',
+			url: '/stream/'+playContent['stream']+'/stop/',
+			dataType: 'json',
+			data: $.toJSON(playContent),
+			success: function(data) {
+				var audio = $('audio');
+				p = audio.get(0);
+				p.pause();
+				$('#stream-musics td div.btn:has(i.icon-stop)').hide();
+				$('#stream-musics td div.btn:has(i.icon-play)').show();
+				$('#player').parent().fadeOut();
+			},
+			error: function(data) {
+				console.log('error while stopping in player');
+			}
+		});
+	})
+	
 	voteButtons.click(function() {
 		var button = $(this);
 		var cell = button.parent();
