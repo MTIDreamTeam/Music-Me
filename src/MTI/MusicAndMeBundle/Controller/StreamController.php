@@ -35,6 +35,34 @@ class StreamController extends Controller
 		$myStreams = $this->getDoctrine()
 						  ->getRepository('MTIMusicAndMeBundle:Stream')
 						  ->findBy(array('owner' => $user->getId()));
+
+		$myStreamsCurrentSongs = array();
+		$now = new \DateTime();
+			foreach ($myStreams as $stream)
+			{
+				$currentRecordQuery = $this->getDoctrine()
+										   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+										   ->createQueryBuilder('record')
+										   ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+										   ->andWhere("record.stream = " . $stream->getId())
+										   ->orderBy('record.played', 'DESC')
+										   ->getQuery();
+				$currentRecordResult = $currentRecordQuery->getResult();
+
+				if (count($currentRecordResult))
+				{
+					$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
+					if ($lastEndTime > $now->getTimestamp())
+					{
+						$myStreamsCurrentSongs[$stream->getId()] = $currentRecordResult[0];
+						continue;
+					}
+				}
+				else {
+					$myStreamsCurrentSongs[$stream->getId()] = null;
+				}
+				
+			}
 		
 		return $this->render(
 			'MTIMusicAndMeBundle:Stream:index.html.twig',
@@ -42,6 +70,7 @@ class StreamController extends Controller
 				'is_connected' => $user == null ? false : true,
 				'user_name' => $userName,
 				'my_streams' => $myStreams,
+				'currentSong' => $myStreamsCurrentSongs
 			)
 		);
 	}

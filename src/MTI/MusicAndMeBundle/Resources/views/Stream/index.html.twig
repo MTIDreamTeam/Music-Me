@@ -22,10 +22,10 @@
 					{% for stream in my_streams %}
 					<li class="span2">
 						<div class="thumbnail">
-							<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ stream.id }}"><img src="/images/placeholder.png" alt="" /></a>
+						<a href="{{ path('MTIMusicAndMeBundle_streamView') }}/{{ stream.id }}"><img src="{% if currentSong[stream.id] %}{{ currentSong[stream.id].music.album.getCoverPath() }}{% else %}/images/placeholder.png{% endif %}" alt="" /></a>
 							<div class="caption">
 								<h5>{{ stream.name }}</h5>
-								<p>5 écoutes</p>
+								<p>{% if currentSong[stream.id] %}{{ currentSong[stream.id].music.title }}{% else %}Aucune musique{% endif %}</p>
 							</div>
 						</div>
 					</li>

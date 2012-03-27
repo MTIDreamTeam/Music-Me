@@ -32,7 +32,7 @@
 				<tr>
 					<td class="music-id" style="display: none;">{{ current_record.music.id }}</td>
 					<td>
-						<img class="thumbnail" src="{{ current_record.music.album.getCoverPath() }}" alt="">
+						<img class="thumbnail" src="../../{{ current_record.music.album.getCoverPath() }}" alt="">
 					</td>
 					<td>{{ current_record.music.title }} — {{ current_record.music.getAlbum().getArtiste().getName() }} — {{ current_record.music.album.title }}</td>
 					<td><span class="label label-important">En ce moment</span></td>
@@ -51,7 +51,7 @@
 				<tr>
 					<td class="music-id" style="display: none;">{{ next_records[i].music.id }}</td>
 					<td>
-						<img class="thumbnail" src="{{ next_records[i].music.album.getCoverPath() }}" alt="">
+						<img class="thumbnail" src="../../{{ next_records[i].music.album.getCoverPath() }}" alt="">
 					</td>
 					<td>{{ next_records[i].music.title }} — {{ next_records[i].music.album.artiste.name }} — {{ next_records[i].music.album.title }}</td>
 					<td><span class="badge"><span class="vote-count">{{ next_records_votes[i] }}</span> vote{% if next_records_votes[i] > 1 %}s{% endif %}</span></td>

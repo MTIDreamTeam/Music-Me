@@ -19,7 +19,7 @@
 			<tr>
 				<td id="stream-id" style="display: none;">{{ stream.id }}</td>
 				<td>
-				<img class="thumbnail" src="{% if listCur[stream.id] %}{{ listCur[stream.id].music.album.getCoverPath() }}{% else %}{% endif %}" alt="">
+				<img class="thumbnail" src="{% if listCur[stream.id] %}../{{ listCur[stream.id].music.album.getCoverPath() }}{% else %}/images/placeholder.png{% endif %}" alt="">
 				</td>
 				<td>{{ stream.name }}</td>
 				<td>{{ stream.owner.firstname }} {{ stream.owner.lastname }}</td>

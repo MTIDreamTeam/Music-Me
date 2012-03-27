@@ -66,7 +66,9 @@ class AccountController extends Controller
 				return $this->render(
 					'MTIMusicAndMeBundle:Account:index.html.twig',
 					array(
-						'form' => $form->createView()
+						'form' => $form->createView(),
+						'user_name' => $username,
+						'is_connected' => $user == null ? false : true,
 					)
 				);
 			}
@@ -116,18 +118,12 @@ class AccountController extends Controller
 
 			if (count($errors) > 0)
 			{
-				if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-					return $this->render(
-						'MTIMusicAndMeBundle:Account:create.ajax.twig',
-						array(
-							'form' => $form->createView()
-						)
-					);
-				else
 					return $this->render(
 						'MTIMusicAndMeBundle:Account:create.html.twig',
 						array(
-							'form' => $form->createView()
+							'form' => $form->createView(),
+							'is_connected' => $user == null ? false : true,
+							'user_name' => $username
 						)
 					);
 			}
@@ -194,18 +190,12 @@ class AccountController extends Controller
 			// Found some errors in the login form
 			if (count($errors) > 0)
 			{
-				if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-					return $this->render(
-						'MTIMusicAndMeBundle:Account:login.ajax.twig',
-						array(
-							'form' => $form->createView()
-						)
-					);
-				else
 					return $this->render(
 						'MTIMusicAndMeBundle:Account:login.html.twig',
 						array(
-							'form' => $form->createView()
+							'form' => $form->createView(),
+							'user_name' => null,
+							'is_connected' => null,
 						)
 					);
 
@@ -219,20 +209,13 @@ class AccountController extends Controller
 
 				if (count($results) == 0)
 				{
-					if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-						return $this->render(
-							'MTIMusicAndMeBundle:Account:login.ajax.twig',
-							array(
-								'form' => $form->createView(),
-								'login_error' => 'Email incorrect'
-							)
-						);
-					else
 						return $this->render(
 							'MTIMusicAndMeBundle:Account:login.html.twig',
 							array(
 								'form' => $form->createView(),
-								'login_error' => 'Email incorrect'
+								'login_error' => 'Email incorrect',
+								'user_name' => null,
+								'is_connected' => null,
 							)
 						);
 				}
@@ -242,20 +225,13 @@ class AccountController extends Controller
 					$hashedFormPassword = md5($form->getData()->getEmail() . $form->getData()->getPassword());
 					if ($registeredUser->getPassword() != $hashedFormPassword)
 					{
-						if (0 === strpos($this->getRequest()->headers->get('Content-Type'), 'application/json'))
-							return $this->render(
-								'MTIMusicAndMeBundle:Account:login.ajax.twig',
-								array(
-									'form' => $form->createView(),
-									'login_error' => 'Mot de passe incorrect'
-								)
-							);
-						else
 							return $this->render(
 								'MTIMusicAndMeBundle:Account:login.html.twig',
 								array(
 									'form' => $form->createView(),
-									'login_error' => 'Mot de passe incorrect'
+									'login_error' => 'Mot de passe incorrect',
+									'user_name' => null,
+									'is_connected' => null,
 								)
 							);
 					}
