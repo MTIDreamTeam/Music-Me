@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
 	var warningAlert = $('#warning-alert');
 	var successAlert = $('#success-alert');
 	// pre fetched UI elements
-	var voteButtons = $('#stream-musics td div.btn:has(i.icon-arrow-up), #search-zik td div.btn:has(i.icon-plus)');
+	var voteButtons = $('#search-zik td div.btn:has(i.icon-plus)');
 	var playButton = $('#stream-musics td div.btn:has(i.icon-play)');
 	var streamButton = $('#search-flux td div.btn:has(i.icon-zoom-in)');
 	var stopButton = $('#stream-musics td div.btn:has(i.icon-stop)');
@@ -169,14 +169,61 @@ jQuery(document).ready(function($) {
 			});
 		})
 	}
+	
+	function bindVoteButton()
+	{
+		$('#content').delegate('#stream-musics td div.btn:has(i.icon-arrow-up)', 'click', function() {
+			var button = $(this);
+			var cell = button.parent();
+			button.tooltip('hide');
+			button.hide();
+			cell.append(spinner);
 
+			var voteContent = {};
+			voteContent['stream'] = parseInt($('#stream-id').html());
+			voteContent['music'] = parseInt(cell.siblings('.music-id').html());
+			voteContent['record'] = parseInt(cell.siblings('.record-id').html());
+			console.log(voteContent['music']);
+
+			$.ajax({
+				type: 'POST',
+				url: '/stream/vote/',
+				dataType: 'json',
+				data: $.toJSON(voteContent),
+				success: function(data) {
+					if (data['alert'] && data['alert']['type'] == 'error')
+					{
+						handleVoteError(data, cell, button);
+						return;
+					}
+					if (button.closest('#search-zik').length)
+					{
+						console.log('boom');
+						window.location.replace( '/stream/'+voteContent['stream'] );
+						return;
+					}
+					if (data['alert'] && data['alert']['type'] == 'success')
+						handleVoteSuccess(data, cell);
+				},
+				error: function(data) {
+					console.log('error');
+					// handleVoteError(data, cell, button);
+				}
+			});
+		});
+	}
+	
 	function refreshContent(delay)
 	{
 		$.ajax({
 			url: window.location.pathname,
 			contentType: 'application/json',
 			success: function(data) {
-				// $('#content').html(data);
+				$('#content').undelegate('click');
+				$('#content').html(data);
+				bindPlayButton();
+				bindStopButton();
+				bindVoteButton();
 				setTimeout(function() { refreshContent(delay); }, delay);
 			}
 		});
