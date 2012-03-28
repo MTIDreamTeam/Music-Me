@@ -35,51 +35,62 @@ class HomeController extends Controller
 														SELECT id, user, MAX(created) AS created, stream
 														FROM `played_stream` GROUP BY stream
 													) B
-													ON A.stream = B.stream AND A.created = B.created WHERE A.user = ' . $user->getId());
+													ON A.stream = B.stream AND A.created = B.created
+													WHERE A.user = ' . $user->getId());
 			$lastPlayedQuery->execute();
 			$lastPlayedIds = $lastPlayedQuery->fetchAll();
-			$lastPlayedIds = array_map(function($entry) { return $entry['id']; }, $lastPlayedIds);
 			
-			// Then, we retrieve the objects from that list of IDs
-			$lastPlayedQuery = $this->getDoctrine()
-									->getRepository('MTIMusicAndMeBundle:PlayedStream')
-									->createQueryBuilder('played');
-			for ($i = 0; $i < count($lastPlayedIds); $i++) {
-				if ($i == 0)
-					$lastPlayedQuery = $lastPlayedQuery->where('played.id = ' . $lastPlayedIds[$i]);
-				else
-					$lastPlayedQuery = $lastPlayedQuery->orWhere('played.id = ' . $lastPlayedIds[$i]);
-			}
-			$lastPlayedQuery = $lastPlayedQuery->orderBy('played.created', 'DESC')
-											   ->getQuery();
-			$lastPlayedResults = $lastPlayedQuery->getResult();
+            if (count($lastPlayedIds))
+            {
+    			$lastPlayedIds = array_map(function($entry) { return $entry['id']; }, $lastPlayedIds);
+			
+    			// Then, we retrieve the objects from that list of IDs
+    			$lastPlayedQuery = $this->getDoctrine()
+    									->getRepository('MTIMusicAndMeBundle:PlayedStream')
+    									->createQueryBuilder('played');
+    			for ($i = 0; $i < count($lastPlayedIds); $i++) {
+    				if ($i == 0)
+    					$lastPlayedQuery = $lastPlayedQuery->where('played.id = ' . $lastPlayedIds[$i]);
+    				else
+    					$lastPlayedQuery = $lastPlayedQuery->orWhere('played.id = ' . $lastPlayedIds[$i]);
+    			}
+    			$lastPlayedQuery = $lastPlayedQuery->orderBy('played.created', 'DESC')
+    											   ->getQuery();
+    			$lastPlayedResults = $lastPlayedQuery->getResult();
 			
 			
-			$lastPlayedCurrentSongs = array();
-			$now = new \DateTime();
-			foreach ($lastPlayedResults as $streamRecord)
-			{
-				$currentRecordQuery = $this->getDoctrine()
-										   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
-										   ->createQueryBuilder('record')
-										   ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
-										   ->andWhere("record.stream = " . $streamRecord->getStream()->getId())
-										   ->orderBy('record.played', 'DESC')
-										   ->getQuery();
-				$currentRecordResult = $currentRecordQuery->getResult();
+    			$lastPlayedCurrentSongs = array();
+    			$now = new \DateTime();
+    			foreach ($lastPlayedResults as $streamRecord)
+    			{
+    				$currentRecordQuery = $this->getDoctrine()
+    										   ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+    										   ->createQueryBuilder('record')
+    										   ->where("record.played <= '" . $now->format('Y-m-d H:i:s') . "'")
+    										   ->andWhere("record.stream = " . $streamRecord->getStream()->getId())
+    										   ->orderBy('record.played', 'DESC')
+    										   ->getQuery();
+    				$currentRecordResult = $currentRecordQuery->getResult();
 				
-				if (count($currentRecordResult))
-				{
-					$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
-					if ($lastEndTime > $now->getTimestamp())
-					{
-						$lastPlayedCurrentSongs[] = $currentRecordResult[0];
-						continue;
-					}
-				}
-				$lastPlayedCurrentSongs[] = null;
-			}
+    				if (count($currentRecordResult))
+    				{
+    					$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
+    					if ($lastEndTime > $now->getTimestamp())
+    					{
+    						$lastPlayedCurrentSongs[] = $currentRecordResult[0];
+    						continue;
+    					}
+    				}
+    				$lastPlayedCurrentSongs[] = null;
+    			}
 			
+            }
+            else
+            {
+                $lastPlayedResults = array();
+                $lastPlayedCurrentSongs = array();
+            }
+            
 			$myStreamsCurrentSongs = array();
 			$now = new \DateTime();
 			foreach ($streams as $stream)
@@ -92,7 +103,7 @@ class HomeController extends Controller
 										   ->orderBy('record.played', 'DESC')
 										   ->getQuery();
 				$currentRecordResult = $currentRecordQuery->getResult();
-				
+			
 				if (count($currentRecordResult))
 				{
 					$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();

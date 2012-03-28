@@ -278,7 +278,7 @@ div.spinner div.bar12 {
 }
 
 #stream-musics td, #stream-musics th, {
-	vertical-align: middle;
+	vertical-align: middle !important;
 }
 
 #search-flux td, #search-flux th {
