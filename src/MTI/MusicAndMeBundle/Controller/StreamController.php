@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage;
+use Symfony\Component\Form\FormError;
 
 use MTI\MusicAndMeBundle\Entity\Stream;
 use MTI\MusicAndMeBundle\Entity\PlayedStream;
@@ -98,6 +99,8 @@ class StreamController extends Controller
 				}
 				else
 				{
+				    $form['name']->addError(new FormError('Un flux "' . $form->getData()->getName() . '" existe déjà'));
+				    
 					return $this->render(
 						'MTIMusicAndMeBundle:Stream:create.html.twig',
 						array(
