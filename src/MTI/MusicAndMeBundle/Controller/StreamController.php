@@ -101,6 +101,8 @@ class StreamController extends Controller
 					return $this->render(
 						'MTIMusicAndMeBundle:Stream:create.html.twig',
 						array(
+						    'is_connected' => $user == null ? false : true,
+        					'user_name' => $userName,
 							'form' => $form->createView(),
 							'create_stream_error' => 'Un flux "' . $form->getData()->getName() . '" existe déjà',
 						)
