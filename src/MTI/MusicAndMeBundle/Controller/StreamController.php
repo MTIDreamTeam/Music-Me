@@ -379,7 +379,7 @@ class StreamController extends Controller
 		return null;
 	}
 	
-	private function getCurrentRecord($stream)
+	private function getCurrentRecord(Stream $stream)
 	{
 		$now = new \DateTime();
 		$currentRecordQuery = $this->getDoctrine()
@@ -390,6 +390,8 @@ class StreamController extends Controller
 								   ->orderBy('record.played', 'DESC')
 								   ->getQuery();
 		$currentRecordResult = $currentRecordQuery->getResult();
+		
+		
 		$currentRecord = null;
 		// var_dump($currentRecordResult);die();
 		if (count($currentRecordResult))
@@ -397,15 +399,21 @@ class StreamController extends Controller
 			$lastEndTime = $currentRecordResult[0]->getPlayed()->getTimestamp() + $currentRecordResult[0]->getMusic()->getDuree();
 			
 			if ($lastEndTime > $now->getTimestamp())
+			{
 				return $currentRecordResult[0];
+			}
 		}
 		
 		return null;
 	}
 	
-	private function reorderStreamRecords(StreamRecord $streamRecord)
+	private function reorderStreamRecords(StreamRecords $streamRecord)
 	{
-		$currentRecord = $this->getCurrentRecord($streamRecord);
+		$currentRecord = $this->getCurrentRecord($streamRecord->getStream());
+		
+		if ($currentRecord == null)
+            return false;
+		
 		$currentMusic = $currentRecord->getMusic();
 		
 		$now = new \DateTime();
@@ -443,6 +451,7 @@ class StreamController extends Controller
 				if ($i < $recordsCount)
 				{
 					$betterRankedRecord = $records[$i + 1];
+                    
 					if (count($betterRankedRecord.getVotes()) < count($streamRecord.getVotes()))
 					{
 						$foundInversion = true;
@@ -512,9 +521,24 @@ class StreamController extends Controller
 		if ($data['record'])
 		{
 			$streamRecord = $this->getDoctrine()
-								 ->getRepository('MTIMusicAndMeBundle:Stream')
+								 ->getRepository('MTIMusicAndMeBundle:StreamRecords')
 								 ->findOneById($data['record']);
-			
+            
+            if ($streamRecord == null)
+            {
+                return new Response(
+    				json_encode(
+    					array(
+    						'alert' => array(
+    							'type' => 'error',
+    							'title' => 'Le vote a échoué',
+    							'message' => 'La musique choisie n\'a pas été trouvée. Veuillez réessayer plus tard',
+    						)
+    					)
+    				)
+    			);
+            }
+            
 			$vote = new Vote();
 			$vote->setUser($user);
 			$vote->setStreamRecord($streamRecord);
