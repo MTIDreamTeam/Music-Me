@@ -69,16 +69,16 @@ function updateProgessBar()
 	}
 }
 
-function refreshContent(delay)
+function refreshContent()
 {
 	$.ajax({
 		url: window.location.pathname,
 		success: function(data) {
-			
+			// $('#content').html(data);
 		}
 	});
 	
-	setTimeout(function() { refreshContent(delay) }, delay);
+	// setTimeout(function() { refreshContent() }, 50000);
 }
 
 jQuery(document).ready(function($) {
@@ -173,7 +173,8 @@ jQuery(document).ready(function($) {
 	
 	if ($('#refresh-content').length)
 	{
-		
+		setTimeout(function() { refreshContent() }, 5000);
+		console.log('refreshing content');
 	}
 
 	playButton.click(function() {

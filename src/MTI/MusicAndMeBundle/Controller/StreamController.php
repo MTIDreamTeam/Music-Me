@@ -176,20 +176,15 @@ class StreamController extends Controller
 		
 		foreach ($nextRecords as $nextRecord)
 		{
-			$nextRecordsHasVoted[] = false;
+            $hasVoted = false;
 			
 			$music = $nextRecord->getMusic();
 			$album = $nextRecord->getMusic()->getAlbum();
-			// $votes = $nextRecord->getVotes();
-			$votes = $this->getDoctrine()
-						  ->getRepository('MTIMusicAndMeBundle:Vote')
-						  ->findByStreamRecord($nextRecord->getId());
-			// foreach($nextRecord->getVotes() as $v)
-			// {
-			// 	echo $v->getId() . '<br/';
-			// }
-			// die();
-			// var_dump(count($votes));die();
+			
+            $votes = $this->getDoctrine()
+                          ->getRepository('MTIMusicAndMeBundle:Vote')
+                          ->findByStreamRecord($nextRecord->getId());
+            
 			$nextRecordsVotes[] = count($votes);
 			$nextMusicId[] = $music->getId();
 			$nextMusicTitle[] = $music->getTitle();
@@ -200,10 +195,11 @@ class StreamController extends Controller
 			{
 				if ($vote->getUser()->getId() == $user->getId())
 				{
-					$nextRecordsHasVoted[] = true;
+					$hasVoted = true;
 					break;
 				}
 			}
+			$nextRecordsHasVoted[] = $hasVoted;
 		}
 		
 		$currentRecordQuery = $this->getDoctrine()
@@ -554,8 +550,8 @@ class StreamController extends Controller
 				$query = $this->getDoctrine()
 							  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
 							  ->createQueryBuilder('record')
-							  ->where("record.played < '" . $currentRecord->getPlayed()->format('Y-m-d H:i:s') . "'")
-							  ->andWhere("record.played >= '" . $now->format('Y-m-d H:i:s') . "'")
+							  ->where("record.played > '" . $currentRecord->getPlayed()->format('Y-m-d H:i:s') . "'")
+                              // ->andWhere("record.played >= '" . $now->format('Y-m-d H:i:s') . "'")
 							  ->andWhere("record.stream = " . $stream->getId())
 							  ->orderBy("record.played", "ASC")
 							  ->getQuery();
@@ -628,7 +624,7 @@ class StreamController extends Controller
 								array(
 									'alert' => array(
 										'type' => 'success',
-										'title' => 'Le vote a bien été pris en compte',
+										'title' => 'Le vote a bien été pris en compte (Now)',
 										'message' => 'Vous avez voté pour le morceau '.$music->getTitle(),
 									)
 								)
@@ -663,7 +659,7 @@ class StreamController extends Controller
 							array(
 								'alert' => array(
 									'type' => 'success',
-									'title' => 'Le vote a bien été pris en compte',
+									'title' => 'Le vote a bien été pris en compte (new record after the currently playing)',
 									'message' => 'Vous avez voté pour le morceau '.$music->getTitle(),
 								)
 							)
@@ -698,7 +694,7 @@ class StreamController extends Controller
 						array(
 							'alert' => array(
 								'type' => 'success',
-								'title' => 'Le vote a bien été pris en compte',
+								'title' => 'Le vote a bien été pris en compte ()',
 								'message' => 'Vous avez voté pour le morceau '.$music->getTitle(),
 							)
 						)
