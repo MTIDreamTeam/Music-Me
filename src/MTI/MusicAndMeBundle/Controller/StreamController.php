@@ -437,7 +437,7 @@ class StreamController extends Controller
 		// Prepares an Entity Manager if we need to update values in the Database
 		$em = $this->getDoctrine()->getEntityManager();
 		
-		for ($i = 0; $i < $recordsCount; $i++)
+		for ($i = 0; $i < $recordsCount - 1; $i++)
 		{
 			if ($foundInversion)
 			{
@@ -451,6 +451,9 @@ class StreamController extends Controller
 				if ($i < $recordsCount)
 				{
 					$betterRankedRecord = $records[$i + 1];
+                    var_dump(get_class($betterRankedRecord));
+                    var_dump(get_class($streamRecord));
+                    // die();
                     
 					if (count($betterRankedRecord.getVotes()) < count($streamRecord.getVotes()))
 					{
@@ -517,6 +520,52 @@ class StreamController extends Controller
 					 ->getRepository('MTIMusicAndMeBundle:User')
 					 ->find($session->get('user_id'));
 		
+		$currentRecord = $this->getCurrentRecord($stream);
+		
+        $upcompingStreams = array();
+		if ($currentRecord)
+		{
+			$now = new \DateTime();
+			
+			$query = $this->getDoctrine()
+						  ->getRepository('MTIMusicAndMeBundle:StreamRecords')
+						  ->createQueryBuilder('record')
+						  ->where("record.played > '" . $currentRecord->getPlayed()->format('Y-m-d H:i:s') . "'")
+                          // ->andWhere("record.played >= '" . $now->format('Y-m-d H:i:s') . "'")
+						  ->andWhere("record.stream = " . $stream->getId())
+						  ->orderBy("record.played", "ASC")
+						  ->getQuery();
+			$upcompingStreams = $query->getResult();
+		}
+		
+		foreach ($upcompingStreams as $nextRecord)
+		{
+		    if ($nextRecord->getMusic()->getId() != $music->getId())
+                continue;
+		    
+		    $votes = $this->getDoctrine()
+                          ->getRepository('MTIMusicAndMeBundle:Vote')
+                          ->findByStreamRecord($nextRecord->getId());
+            
+    		foreach ($votes as $vote)
+            {
+                if ($vote->getUser()->getId() == $user->getId())
+                {
+                    return new Response(
+        				json_encode(
+        					array(
+        						'alert' => array(
+        							'type' => 'error',
+        							'title' => 'Vous ne pouvez pas voter pour cette musique ' . $nextRecord->getMusic()->getTitle(),
+        							'message' => 'Vous avec déjà voté pour cette chanson dans ce flux.',
+        						)
+        					)
+        				)
+        			);
+                }
+            }
+        }
+		
 		// If the request sent the record id (i.e. the song was voted from the stream view)
 		if ($data['record'])
 		{
@@ -564,7 +613,7 @@ class StreamController extends Controller
 		// We need to know if we have to create a new stream record or find the existing one
 		else
 		{
-			$currentRecord = $this->getCurrentRecord($stream);
+            // $currentRecord = $this->getCurrentRecord($stream);
 			
 			// There is a song playing
 			if ($currentRecord)

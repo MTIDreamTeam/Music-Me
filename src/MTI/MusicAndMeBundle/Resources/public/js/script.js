@@ -5,82 +5,6 @@ var spinnerPlay = '<div class="btn btn-primary disabled"><div class="spinner"><d
 var validated = '<div class="btn btn-success disabled"><i class="icon-ok icon-white"></i></div>';
 var error = '<div class="btn btn-danger disabled"><i class="icon-remove icon-white"></i></div>';
 
-function showAlert(title, message, id, alert)
-{
-	console.log('plop');
-	alert.fadeOut();
-	alert.find('h4').text(title);
-	alert.find('span').text(message);
-	alert.fadeIn();
-	setTimeout(function() {
-		alert.fadeOut();
-	}, 3000);
-}
-
-function showError(title, message)
-{
-	showAlert(title, message, 'error', errorAlert);
-}
-
-function showWarning(title, message)
-{
-	showAlert(title, message, 'warning', warningAlert);
-}
-
-function showInfo(title, message)
-{
-	showAlert(title, message, 'info', infoAlert);
-}
-
-function showSuccess(title, message)
-{
-	showAlert(title, message, 'success', successAlert);
-}
-
-function handleVoteError(data, cell, button)
-{
-	cell.find('.spinner').parent().remove();
-	cell.append(error);
-	if (data && data['alert'] && data['alert']['title'] && data['alert']['message'])
-	{
-		showError(data['alert']['title'], data['alert']['message']);
-		setTimeout(function() {
-			$('td >	 div.btn-danger').remove();
-			button.fadeIn();
-		}, 2000);
-	}
-}
-
-function handleVoteSuccess(data, cell)
-{
-	cell.find('.spinner').parent().remove();
-	cell.append(validated);
-	showSuccess(data['alert']['title'], data['alert']['message']);
-}
-
-function updateProgessBar()
-{
-	var audio = $("audio").get(0);
-	if (audio.paused == false)
-	{
-		var percentage = (100.0 * audio.currentTime) / audio.duration;
-		$('.progress .bar').css('width', percentage+'%');
-		setTimeout(function() { updateProgessBar(); }, 100);
-	}
-}
-
-function refreshContent()
-{
-	$.ajax({
-		url: window.location.pathname,
-		success: function(data) {
-			// $('#content').html(data);
-		}
-	});
-	
-	// setTimeout(function() { refreshContent() }, 50000);
-}
-
 jQuery(document).ready(function($) {
 	
 	var errorAlert = $('#error-alert');
@@ -91,8 +15,81 @@ jQuery(document).ready(function($) {
 	var closeAlertButton = $('div.alert > a.close').click(function() {
 		$(this).parent().fadeOut();
 	});
+	
+	function showAlert(title, message, id, alert)
+	{
+		console.log('plop');
+		alert.fadeOut();
+		alert.find('h4').text(title);
+		alert.find('span').text(message);
+		alert.fadeIn();
+		setTimeout(function() {
+			alert.fadeOut();
+		}, 4000);
+	}
 
+	function showError(title, message)
+	{
+		showAlert(title, message, 'error', errorAlert);
+	}
 
+	function showWarning(title, message)
+	{
+		showAlert(title, message, 'warning', warningAlert);
+	}
+
+	function showInfo(title, message)
+	{
+		showAlert(title, message, 'info', infoAlert);
+	}
+
+	function showSuccess(title, message)
+	{
+		showAlert(title, message, 'success', successAlert);
+	}
+
+	function handleVoteError(data, cell, button)
+	{
+		cell.find('.spinner').parent().remove();
+		cell.append(error);
+		if (data && data['alert'] && data['alert']['title'] && data['alert']['message'])
+		{
+			showError(data['alert']['title'], data['alert']['message']);
+			setTimeout(function() {
+				$('td >	 div.btn-danger').remove();
+				button.fadeIn();
+			}, 2000);
+		}
+	}
+
+	function handleVoteSuccess(data, cell)
+	{
+		cell.find('.spinner').parent().remove();
+		cell.append(validated);
+		showSuccess(data['alert']['title'], data['alert']['message']);
+	}
+
+	function updateProgessBar()
+	{
+		var audio = $("audio").get(0);
+		if (audio.paused == false)
+		{
+			var percentage = (100.0 * audio.currentTime) / audio.duration;
+			$('.progress .bar').css('width', percentage+'%');
+			setTimeout(function() { updateProgessBar(); }, 100);
+		}
+	}
+
+	function refreshContent()
+	{
+		$.ajax({
+			url: window.location.pathname,
+			success: function(data) {
+				// $('#content').html(data);
+			}
+		});
+	}
+	
 	// pre fetched UI elements
 	var voteButtons = $('#stream-musics td div.btn:has(i.icon-arrow-up), #search-zik td div.btn:has(i.icon-plus)');
 	var playButton = $('#stream-musics td div.btn:has(i.icon-play)');
@@ -299,6 +296,11 @@ jQuery(document).ready(function($) {
 			dataType: 'json',
 			data: $.toJSON(voteContent),
 			success: function(data) {
+				if (data['alert'] && data['alert']['type'] == 'error')
+				{
+					handleVoteError(data, cell, button);
+					return;
+				}
 				if (button.closest('#search-zik').length)
 				{
 					console.log('boom');
@@ -307,8 +309,6 @@ jQuery(document).ready(function($) {
 				}
 				if (data['alert'] && data['alert']['type'] == 'success')
 					handleVoteSuccess(data, cell);
-				else if (data['alert'] && data['alert']['type'] == 'error')
-					handleVoteError(data, cell, button);
 			},
 			error: function(data) {
 				console.log('error');
