@@ -6,6 +6,6 @@
 <li class="active">Mon Compte</li>
 </ul>
 <section id="login">
-Hello {{ user_name }} !
+Hello {% if user_name is defined %}{{ user_name }}{% endif %} !
 </section>
 

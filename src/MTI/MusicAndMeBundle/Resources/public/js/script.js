@@ -80,12 +80,14 @@ jQuery(document).ready(function($) {
 		}
 	}
 
-	function refreshContent()
+	function refreshContent(delay)
 	{
 		$.ajax({
 			url: window.location.pathname,
+			contentType: 'application/json',
 			success: function(data) {
-				// $('#content').html(data);
+				$('#content').html(data);
+				setTimeout(function() { refreshContent(delay); }, delay);
 			}
 		});
 	}
@@ -170,7 +172,7 @@ jQuery(document).ready(function($) {
 	
 	if ($('#refresh-content').length)
 	{
-		setTimeout(function() { refreshContent() }, 5000);
+		setTimeout(function() { refreshContent(5000) }, 5000);
 		console.log('refreshing content');
 	}
 

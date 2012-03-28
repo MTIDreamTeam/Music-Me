@@ -222,24 +222,43 @@ class StreamController extends Controller
 				$currentRecord = $currentRecordResult[0];
 			}
 		}
-		
-		return $this->render(
-			'MTIMusicAndMeBundle:Stream:view.html.twig',
-			array(
-				'is_connected' => $user == null ? false : true,
-				'user_name' => $userName,
-				'stream' => $stream,
-				'records_count' => $recordsCount,
-				'current_record' => $currentRecord,
-				'next_records' => $nextRecords,
-				'next_records_votes' => $nextRecordsVotes,
-				'next_records_has_voted' => $nextRecordsHasVoted,
-				'next_musics_id' => $nextMusicId,
-				'next_musics_title' => $nextMusicTitle,
-				'next_musics_artist' => $nextMusicArtist,
-				'next_musics_album' => $nextMusicAlbum,
-			)
-		);
+        
+		if ($this->getRequest()->isXmlHttpRequest())
+			return $this->render(
+    			'MTIMusicAndMeBundle:Stream:view.ajax.twig',
+    			array(
+    				'is_connected' => $user == null ? false : true,
+    				'user_name' => $userName,
+    				'stream' => $stream,
+    				'records_count' => $recordsCount,
+    				'current_record' => $currentRecord,
+    				'next_records' => $nextRecords,
+    				'next_records_votes' => $nextRecordsVotes,
+    				'next_records_has_voted' => $nextRecordsHasVoted,
+    				'next_musics_id' => $nextMusicId,
+    				'next_musics_title' => $nextMusicTitle,
+    				'next_musics_artist' => $nextMusicArtist,
+    				'next_musics_album' => $nextMusicAlbum,
+    			)
+    		);
+		else
+			return $this->render(
+    			'MTIMusicAndMeBundle:Stream:view.html.twig',
+    			array(
+    				'is_connected' => $user == null ? false : true,
+    				'user_name' => $userName,
+    				'stream' => $stream,
+    				'records_count' => $recordsCount,
+    				'current_record' => $currentRecord,
+    				'next_records' => $nextRecords,
+    				'next_records_votes' => $nextRecordsVotes,
+    				'next_records_has_voted' => $nextRecordsHasVoted,
+    				'next_musics_id' => $nextMusicId,
+    				'next_musics_title' => $nextMusicTitle,
+    				'next_musics_artist' => $nextMusicArtist,
+    				'next_musics_album' => $nextMusicAlbum,
+    			)
+    		);
 	}
 	
 	public function currentSongAction(Request $request)
